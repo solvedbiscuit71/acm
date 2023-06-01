@@ -1,0 +1,61 @@
+name,price,image_url,is_veg
+Plain Dosa,50,/image/plain dosa.jpg,True
+Podi Dosa,60,/image/podi dosa.jpg,True
+Ghee Dosa,60,/image/ghee dosa.jpg,True
+Egg Dosa,60,/image/egg dosa.jpg,False
+Masala Dosa,60,/image/masala dosa.jpg,True
+Paneer Dosa,70,/image/paneer dosa.jpg,True
+Chicken Dosa,70,/image/chicken dosa.jpg,False
+Chapati,40,/image/chapati.jpg,True
+Paratta,40,/image/paratta.jpg,True
+Chill Paratta,70,/image/chilli parotta.jpg,True
+Aloo Paratta,50,/image/aloo paratha.jpg,True
+Chola Puri,50,/image/chola puri.jpg,True
+Gobi 65,100,/image/gobi 65.jpeg,True
+Meals,40,/image/meals.jpg,True
+Veg. Fried Rice,60,/image/veg fried rice.jpg,True
+Egg Fried Rice,70,/image/egg fried rice.jpg,False
+Chicken Fried Rice,100,/image/chicken fried rice.webp,False
+Veg. Noodles,60,/image/veg noodles.jpg,True
+Egg Noodles,70,/image/egg noodles.jpg,False
+Chicken Noodles,100,/image/chicken noodles.jpg,False
+Curd Rice,40,/image/curd rice.jpg,True
+Sambaar Rice,40,/image/sambaar rice.jpg,True
+Chicken Biriyani,130,/mage/chicken biryani.jpg,False
+Samosa,15,/image/samosa.webp,True
+Veg. Puffs,15,/image/veg puff.jpg,True
+Paneer Puffs,25,/image/paneer puff.jpg,True
+Egg Puffs,20,/image/egg puff.jpg,False
+Chicken Puffs,25,/image/chicken puffs.jpg,False
+Veg. Roll,20,/image/veg roll.jpg,True
+Chicken nuggets,100,/image/chicken nuggets.webp,False
+Chicken 65,60,/image/chicken 65.webp,False
+Prawn Masala,100,/mage/prawn masala.jpg,False
+Fish fry,80,/image/fish fry.jpg,False
+Paneer Butter Masala,100,/image/paneer butter masala.webp,True
+Mushroom Masala,100,/image/mushroom masala.jpg,True
+Pani Puri,30,/image/pani puri.jpg,True
+Bhel Puri,30,/image/bhel puri.jpg,True
+Veg. Sandwich,40,/image/veg sandwich.jpg,True
+Chicken Sandwich,70,/image/chicken sandwich.jpg,True
+Vada pav,30,/image/vada pav.jpg,True
+Kachodi,30,/image/kachodi.jpg,True
+Veg Burger,50,/image/veg burger.webp,True
+Chicken Burger,70,/image/chicken burger.jpg,False
+Bread Omelet,30,/image/bread omelette.webp,False
+Pineapple Juice,40,/image/pineapple juice.jpg,True
+Orange Juice,40,/image/orange juice.jpeg,True
+Apple juice,40,/image/apple juice.jpg,True
+Pomegranate Juice,40,/image/pomegranate juice.jpg,True
+Grape Juice,40,/image/grape juice.jpg,True
+Mango Juice,40,/image/mango juice.jpg,True
+Watermelon Juice,40,/image/watermelon juice.jpg,True
+Chocolate Milkshake,70,/image/chocolate milkshake.jpg,True
+Strawberry Milkshake,70,/image/strawberry milkshake.jpg,True
+Mango Milkshake,70,/image/mango milkshake.jpg,True
+Falooda,100,/image/falooda.jpg,True
+Soda Lime,30,/image/soda lime.jpeg,True
+Egg Roll,70,/image/egg roll.webp,False
+Paneer Roll,70,/image/paneer roll.jpg,True
+Chicken Roll,80,/image/chicken roll.jpg,False
+Veg Roll1,60,/image/veg roll1.jpg,True
