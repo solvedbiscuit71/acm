@@ -17,4 +17,4 @@ uvicorn main:app
 uvicorn main:app --reload
 ```
 
-This runs the server at localhost:8000
+This runs the server at [localhost:8000](http://localhost:8000) and API documentation can be found at [localhost:8000/docs](http://localhost:8000/docs)
