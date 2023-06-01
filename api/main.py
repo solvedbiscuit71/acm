@@ -15,6 +15,7 @@ async def menu() -> list[Item]:
 
     items = []
     async for item in acm.items.find():
+        item['id'] = item['_id']
         items.append(item)
 
     return items
