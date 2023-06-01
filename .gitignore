@@ -1,0 +1,7 @@
+# ignore files
+.DS_Store
+.env
+
+# ignore folders
+__pycache__/
+node_modules/
