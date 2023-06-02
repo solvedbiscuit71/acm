@@ -10,12 +10,11 @@ acm = client['acm']
 app = FastAPI()
 
 
-@app.get("/menu")
-async def menu() -> list[Item]:
+@app.get("/menu", response_model=list[Item], response_model_by_alias=False)
+async def menu():
 
     items = []
     async for item in acm.items.find():
-        item['id'] = item['_id']
         items.append(item)
 
     return items
