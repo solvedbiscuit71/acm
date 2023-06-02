@@ -2,9 +2,15 @@
 
 ## Prerequisites
 
+Install the below dependencies,
+- fastapi
+- uvicorn
+- motor
+
+Run `script.py` to load the dummy item's data into the database
 ```bash
-pip3 install fastapi
-pip3 install "uvicorn[standard]"
+cd api
+python3 script.py
 ```
 
 ## Run
