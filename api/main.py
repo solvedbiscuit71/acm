@@ -9,6 +9,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from schema.item import Item
 from schema.user import UserIn, UserInOptional, UserOut
 from schema.database import get_database, database_connect, database_disconnect, ObjectId, validate_id
+from schema.security import hash_password
+
 
 app = FastAPI()
 
@@ -20,7 +22,7 @@ Id = Annotated[ObjectId, Depends(validate_id)]
 async def create_user(user_data: UserIn, db: Database):
     payload = user_data.dict()
     payload.pop("password")
-    payload.update({"hashed_password": "xxx"})
+    payload.update({"hashed_password": hash_password(user_data.password)})
 
     count = await db.users.count_documents({"mobile": user_data.mobile})
     if count:
@@ -40,7 +42,7 @@ async def create_user(id: Id, user_data: UserInOptional, db: Database):
         payload.update({"name": user_data.name})
 
     if user_data.password is not None:
-        payload.update({"hashed_password": "xxx"})
+        payload.update({"hashed_password": hash_password(user_data.password)})
 
     if user_data.mobile is not None:
         count = await db.users.count_documents({"mobile": user_data.mobile,
