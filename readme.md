@@ -2,6 +2,8 @@
 
 ## Prerequisites
 
+### Python Environment
+
 Setup a new python virtual environment
 ```
 cd api
@@ -27,6 +29,18 @@ pip3 install -r requirement.txt
 
 **NOTE: VSCode can identify requirement.txt as pip file and prompt to create a 
 virtual enviroment**
+
+### CLI
+
+To load item's data into the database, run
+```bash
+python3 script.py --item
+```
+
+To generate a bcrpyt salt, run
+```bash
+python3 script.py --salt
+```
 
 ## Run
 
