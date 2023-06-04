@@ -8,6 +8,8 @@ async def main():
     client: AsyncIOMotorClient = AsyncIOMotorClient()
     db: AsyncIOMotorDatabase = client["acm"]
 
+    await db.items.drop()
+
     items = []
     modifiers = [str, int, str, lambda x: bool(x[:-1])]
     with open(os.getcwd() + os.sep + "assets" + os.sep + "items.csv", "r") as file:
