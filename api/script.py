@@ -1,22 +1,27 @@
+import os
 import asyncio
-import pandas as pd
 
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
 
 async def main():
-    client = AsyncIOMotorClient()
-    acm = client['acm']
-    items = acm['items']
+    client: AsyncIOMotorClient = AsyncIOMotorClient()
+    db: AsyncIOMotorDatabase = client["acm"]
 
-    df = pd.read_csv("./assets/items.csv")
-    rows = []
-    for id, row in df.iterrows():
-        row = row.to_dict()
-        row['_id'] = 200 + id
-        rows.append(row)
+    items = []
+    modifiers = [str, int, str, lambda x: bool(x[:-1])]
+    with open(os.getcwd() + os.sep + "assets" + os.sep + "items.csv", "r") as file:
+        headers = file.readline()[:-1].split(',')
 
-    result = await items.insert_many(rows)
-    print(f"Inserted {len(result.inserted_ids)}")
+        while item := file.readline():
+            item = item.split(',')
+            for i, mod in enumerate(modifiers):
+                item[i] = mod(item[i])
+            items.append(dict(zip(headers, item)))
+
+    result = await db.items.insert_many(items)
+    print(f"Inserted {len(result.inserted_ids)} items")
+
+    client.close()
 
 asyncio.run(main())
