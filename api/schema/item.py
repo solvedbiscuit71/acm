@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from schema.database import ObjectId, DBModel
 
 
-class Item(BaseModel):
-    id: int = Field(alias='_id')
+class Item(DBModel):
+    id: ObjectId = Field(alias='_id')
     name: str
     price: int
     image_url: str
