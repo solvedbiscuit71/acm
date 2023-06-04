@@ -7,6 +7,12 @@ class User(DBModel):
     mobile: str
 
 
+class UserInOptional(DBModel):
+    name: str | None = None
+    mobile: str | None = None
+    password: str | None = None
+
+
 class UserIn(User):
     password: str
 

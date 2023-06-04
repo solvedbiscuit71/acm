@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from pydantic import BaseModel
 from bson.objectid import ObjectId as BaseObjectId
 
@@ -41,3 +42,14 @@ def database_connect():
 
 def database_disconnect():
     db.client.close()
+
+
+async def validate_id(id: str) -> ObjectId:
+    id = ObjectId(id)
+
+    db = get_database()
+    user = await db.users.count_documents({"_id": id})
+    if not user:
+        raise HTTPException(status_code=400, detail="id not found")
+    else:
+        return id
