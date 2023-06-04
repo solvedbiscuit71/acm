@@ -49,8 +49,11 @@ async def create_user(id: Id, user_data: UserInOptional, db: Database):
             raise HTTPException(status_code=409, detail="mobile already used")
         payload.update({"mobile": user_data.mobile})
 
-    result: UpdateResult = await db.users.update_one({"_id": id}, {"$set": payload})
-    return {"message": "updated", "modified_count": result.modified_count}
+    if payload:
+        result: UpdateResult = await db.users.update_one({"_id": id}, {"$set": payload})
+        return {"message": "success", "modified_count": result.modified_count}
+    else:
+        return {"message": "success", "modified_count": 0}
 
 
 @app.get("/menu", response_model=list[Item])
