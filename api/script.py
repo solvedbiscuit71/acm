@@ -1,10 +1,11 @@
+import sys
 import os
 import asyncio
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from bcrypt import gensalt
 
-
-async def main():
+async def create_items():
     client: AsyncIOMotorClient = AsyncIOMotorClient()
     db: AsyncIOMotorDatabase = client["acm"]
 
@@ -25,5 +26,21 @@ async def main():
     print(f"Inserted {len(result.inserted_ids)} items")
 
     client.close()
+
+
+def create_salt():
+    with open("schema/.env", "w") as file:
+        file.write(f"SALT={gensalt().decode()}")
+
+    print("Generated salt in schema/.env")
+
+async def main():
+    arg = sys.argv[1:]
+
+    if '--salt' in arg or '--all' in arg:
+        create_salt()
+    if '--item' in arg or '--all' in arg:
+        await create_items()
+
 
 asyncio.run(main())
