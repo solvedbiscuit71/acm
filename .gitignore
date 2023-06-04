@@ -3,5 +3,6 @@
 .env
 
 # ignore folders
+.venv/
 __pycache__/
 node_modules/
