@@ -4,17 +4,18 @@ from schema.database import ObjectId, DBModel
 
 class User(DBModel):
     name: str = "anonymous"
-    mobile: str
+    mobile: str = Field(min_length=10, max_length=10, regex="^[0-9]*$")
 
 
 class UserInOptional(DBModel):
     name: str | None = None
-    mobile: str | None = None
-    password: str | None = None
+    mobile: str | None = Field(
+        default=None, min_length=10, max_length=10, regex="^[0-9]*$")
+    password: str | None = Field(default=None, min_length=8)
 
 
 class UserIn(User):
-    password: str
+    password: str = Field(min_length=8)
 
 
 class UserOut(User):
