@@ -2,6 +2,7 @@ from typing import Annotated
 from fastapi import HTTPException, Depends
 from pydantic import BaseModel
 from bson.objectid import ObjectId as BaseObjectId
+from bson.errors import InvalidId
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
@@ -15,8 +16,8 @@ class ObjectId(BaseObjectId):
     def validate(cls, value: str):
         try:
             return cls(value)
-        except:
-            raise ValueError("Not a valid ObjectId")
+        except InvalidId:
+            raise HTTPException(status_code=422, detail="Invalid ObjectId")
 
 
 class DBModel(BaseModel):

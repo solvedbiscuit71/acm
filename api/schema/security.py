@@ -4,7 +4,6 @@ import dotenv
 from fastapi import HTTPException
 from bcrypt import hashpw, checkpw
 
-from schema.token import TokenData
 from schema.user import UserAuth
 from schema.database import get_user_by_id, count_user_by_id, ObjectId
 
@@ -20,9 +19,7 @@ def validate_password(passwd: str, hashed_passwd: str) -> bool:
     return checkpw(passwd.encode(), hashed_passwd.encode())
 
 
-async def authenticate_id(id: str) -> ObjectId:
-    id = ObjectId(id)
-
+async def authenticate_id(id: ObjectId) -> ObjectId:
     if await count_user_by_id(id):
         return id
     else:
