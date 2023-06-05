@@ -42,6 +42,15 @@ To generate a bcrpyt salt, run
 python3 script.py --salt
 ```
 
+### Environment variables
+
+For token generation, we need a SECRET and ALGORITHM. add the following inside
+`schema/.env` file
+```env
+SECRET=<your-secret>
+ALGORITHM=HS256
+```
+
 ## Run
 
 ```bash
