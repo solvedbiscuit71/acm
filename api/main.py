@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pymongo.results import InsertOneResult, UpdateResult
 
 from schema.item import Item
-from schema.token import Token
+from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user, authenticate_id
@@ -52,9 +52,15 @@ async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_da
         return {"message": "success", "modified_count": 0}
 
 
-@app.post("/user/token", response_model=Token, dependencies=[Depends(authenticate_user)])
-async def create_token():
-    return {"access_token": "xxx"}
+@app.post("/user/token", response_model=Token)
+async def create_token(id: Annotated[ObjectId, Depends(authenticate_user)]):
+    payload = {"_id": str(id)}
+    return {"access_token": create_access_token(payload)}
+
+
+@app.get("/user/token")
+async def verify_token(id: Annotated[ObjectId, Depends(authenticate_token)]):
+    return {"_id": str(id)}
 
 
 @app.get("/menu", response_model=list[Item])
