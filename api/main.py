@@ -4,22 +4,19 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 
 from pymongo.results import InsertOneResult, UpdateResult
-from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from schema.item import Item
 from schema.token import Token
-from schema.user import UserIn, UserInOptional, UserOut
-from schema.database import get_database, database_connect, database_disconnect, ObjectId
+from schema.user import UserId, UserCreate, UserUpdate
+from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user, authenticate_id
 
 
 app = FastAPI()
 
-Database = Annotated[AsyncIOMotorDatabase, Depends(get_database)]
 
-
-@app.post("/user", response_model=UserOut)
-async def create_user(user_data: UserIn, db: Database):
+@app.post("/user", response_model=UserId)
+async def create_user(user_data: UserCreate, db: Database):
     payload = user_data.dict()
     payload.pop("password")
     payload.update({"hashed_password": hash_password(user_data.password)})
@@ -29,27 +26,19 @@ async def create_user(user_data: UserIn, db: Database):
         raise HTTPException(status_code=409, detail="mobile already used")
 
     result: InsertOneResult = await db.users.insert_one(payload)
-    payload.pop("hashed_password")
-    payload.update({"_id": result.inserted_id})
-
-    return payload
-
-
-@app.post("/user/token", response_model=Token, dependencies=[Depends(authenticate_user)])
-async def create_token():
-    return {"access_token": "xxx"}
+    return {"_id": result.inserted_id}
 
 
 @app.patch("/user/{id}", response_model=None)
-async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_data: UserInOptional, db: Database):
-    payload = {}
-    if user_data.name is not None:
+async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_data: UserUpdate, db: Database):
+    payload = dict()
+    if user_data.name:
         payload.update({"name": user_data.name})
 
-    if user_data.password is not None:
+    if user_data.password:
         payload.update({"hashed_password": hash_password(user_data.password)})
 
-    if user_data.mobile is not None:
+    if user_data.mobile:
         count = await db.users.count_documents({"mobile": user_data.mobile,
                                                 "_id": {"$ne": id}})
         if count:
@@ -61,6 +50,11 @@ async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_da
         return {"message": "success", "modified_count": result.modified_count}
     else:
         return {"message": "success", "modified_count": 0}
+
+
+@app.post("/user/token", response_model=Token, dependencies=[Depends(authenticate_user)])
+async def create_token():
+    return {"access_token": "xxx"}
 
 
 @app.get("/menu", response_model=list[Item])

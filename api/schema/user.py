@@ -1,4 +1,4 @@
-from pydantic import Field, BaseModel
+from pydantic import Field
 from schema.database import ObjectId, DBModel
 
 
@@ -12,21 +12,21 @@ class UserAuth(DBModel):
     password: str = Field(min_length=8)
 
 
-class UserInOptional(DBModel):
-    name: str | None = None
-    mobile: str | None = Field(
-        default=None, min_length=10, max_length=10, regex="^[0-9]*$")
-    password: str | None = Field(default=None, min_length=8)
+class UserDB(DBModel):
+    id: ObjectId = Field(alias='_id')
+    hashed_password: str
 
 
-class UserIn(UserData):
+class UserCreate(UserData):
     password: str = Field(min_length=8)
 
 
-class UserOut(UserData):
-    id: ObjectId = Field(alias='_id')
+class UserUpdate(DBModel):
+    name: str = None
+    mobile: str = Field(default=None, min_length=10,
+                        max_length=10, regex="^[0-9]*$")
+    password: str = Field(default=None, min_length=8)
 
 
-class UserDB(UserData):
+class UserId(DBModel):
     id: ObjectId = Field(alias='_id')
-    hashed_password: str

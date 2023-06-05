@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from schema.user import UserOut
+from schema.user import UserId
 
 
 class Token(BaseModel):
@@ -7,5 +7,5 @@ class Token(BaseModel):
     type: str = "bearer"
 
 
-class TokenData(UserOut):
+class TokenData(UserId):
     pass

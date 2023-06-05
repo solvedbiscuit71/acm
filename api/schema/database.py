@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+from typing import Annotated
+from fastapi import HTTPException, Depends
 from pydantic import BaseModel
 from bson.objectid import ObjectId as BaseObjectId
 
@@ -25,11 +26,8 @@ class DBModel(BaseModel):
         }
 
 
-class Database:
+class Connection:
     client: AsyncIOMotorClient = None
-
-
-db: Database = Database()
 
 
 def database_connect():
@@ -44,7 +42,7 @@ def get_database() -> AsyncIOMotorDatabase:
     return db.client["acm"]
 
 
-async def get_user(id: ObjectId) -> dict:
+async def get_user_by_id(id: ObjectId) -> dict:
     db = get_database()
     user = await db.users.find_one({"_id": id})
     if not user:
@@ -58,3 +56,6 @@ async def count_user_by_id(id: ObjectId) -> int:
     if not count:
         raise HTTPException(status_code=400, detail="id not found")
     return count
+
+db: Connection = Connection()
+Database = Annotated[AsyncIOMotorDatabase, Depends(get_database)]
