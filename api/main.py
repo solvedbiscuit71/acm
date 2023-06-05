@@ -7,15 +7,15 @@ from pymongo.results import InsertOneResult, UpdateResult
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from schema.item import Item
+from schema.token import Token
 from schema.user import UserIn, UserInOptional, UserOut
-from schema.database import get_database, database_connect, database_disconnect, ObjectId, validate_id
-from schema.security import hash_password
+from schema.database import get_database, database_connect, database_disconnect, ObjectId
+from schema.security import hash_password, authenticate_user, authenticate_id
 
 
 app = FastAPI()
 
 Database = Annotated[AsyncIOMotorDatabase, Depends(get_database)]
-Id = Annotated[ObjectId, Depends(validate_id)]
 
 
 @app.post("/user", response_model=UserOut)
@@ -35,8 +35,13 @@ async def create_user(user_data: UserIn, db: Database):
     return payload
 
 
+@app.post("/user/token", response_model=Token, dependencies=[Depends(authenticate_user)])
+async def create_token():
+    return {"access_token": "xxx"}
+
+
 @app.patch("/user/{id}", response_model=None)
-async def create_user(id: Id, user_data: UserInOptional, db: Database):
+async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_data: UserInOptional, db: Database):
     payload = {}
     if user_data.name is not None:
         payload.update({"name": user_data.name})
