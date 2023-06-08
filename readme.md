@@ -44,11 +44,12 @@ python3 script.py --salt
 
 ### Environment variables
 
-For token generation, we need a SECRET and ALGORITHM. add the following inside
+For token generation, we need a SECRET, ALGORITHM and ORIGINS. add the following inside
 `schema/.env` file
 ```env
 SECRET=<your-secret>
 ALGORITHM=HS256
+ORIGINS=<list-of-origins>
 ```
 
 ## Run
