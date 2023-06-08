@@ -1,10 +1,12 @@
 import os
 import dotenv
 
-from fastapi import HTTPException
+from typing import Annotated
+
+from fastapi import HTTPException, Header
 from bcrypt import hashpw, checkpw
 
-from schema.user import UserAuth, UserCreate
+from schema.user import UserAuth
 from schema.database import get_user_by_id, get_user_by_mobile, count_user_by_id, ObjectId
 
 dotenv.load_dotenv()
@@ -34,9 +36,9 @@ async def authenticate_user_id(user_auth: UserAuth) -> ObjectId:
         raise HTTPException(status_code=401, detail="invalid password")
 
 
-async def authenticate_user_mobile(user_data: UserCreate) -> ObjectId:
-    user = await get_user_by_mobile(user_data.mobile)
-    if validate_password(user_data.password, user["hashed_password"]):
+async def authenticate_user_mobile(mobile: Annotated[str, Header()], password: Annotated[str, Header()]) -> ObjectId:
+    user = await get_user_by_mobile(mobile)
+    if validate_password(password, user["hashed_password"]):
         return user["_id"]
     else:
         raise HTTPException(status_code=401, detail="invalid password")
