@@ -9,11 +9,6 @@
         name: string;
     }
 
-    interface UserCreate {
-        mobile: string;
-        password: string;
-    }
-
     let user: User = {
         id: "",
         mobile: "",
@@ -21,18 +16,31 @@
         name: "",
     };
 
+    async function getId(options: any): Promise<string | undefined> {
+        let result = await fetch("http://localhost:8000/user", options);
+        let data = await result.json();
+
+        switch (result.status) {
+            case 200:
+                return data["_id"];
+            case 401:
+                alert("incorrect password");
+                return undefined;
+        }
+    }
+
     async function handleSubmit() {
         if (!/^[0-9]{10}$/.test(user.mobile)) {
-            alert("invalid mobile number")
-            return
+            alert("invalid mobile number");
+            return;
         }
 
         if (user.password.length < 8) {
-            alert("password must be atleast 8 characters")
-            return
+            alert("password must be atleast 8 characters");
+            return;
         }
 
-        let payload: UserCreate = {
+        const payload = {
             mobile: user.mobile,
             password: user.password,
         };
@@ -44,16 +52,22 @@
             body: JSON.stringify(payload),
         };
 
-        let result = await fetch("http://localhost:8000/user", options)
-        let data = await result.json()
+        let result = await fetch("http://localhost:8000/user", options);
+        let data = await result.json();
 
         switch (result.status) {
             case 200:
-                user.id = data["_id"]
-                break
+                user.id = data["_id"];
+                break;
             case 409:
-                alert(data["detail"])
-                break
+                user.id = await getId({
+                    method: "GET",
+                    headers: {
+                        Mobile: user.mobile,
+                        Password: user.password,
+                    },
+                }) || user.id;
+                break;
         }
     }
 </script>
@@ -66,7 +80,7 @@
     <h1>ACM</h1>
 
     {#if user.id}
-        <div></div>
+        <div />
     {:else}
         <form on:submit|preventDefault={handleSubmit}>
             <Input name="Mobile" type="text" bind:value={user.mobile} />
