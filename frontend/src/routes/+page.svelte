@@ -4,6 +4,20 @@
 
 <script>
     import Loader from "$lib/Loader.svelte";
+    import { onMount } from "svelte";
+
+    onMount(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            // verify token??
+            return
+        } else {
+            // redirect /login
+            setInterval(() => {
+                window.location.replace("/login")
+            }, 1000)
+        }
+    })
 </script>
 
 <main>
