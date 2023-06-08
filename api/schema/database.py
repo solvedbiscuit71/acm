@@ -17,7 +17,7 @@ class ObjectId(BaseObjectId):
         try:
             return cls(value)
         except InvalidId:
-            raise HTTPException(status_code=422, detail="Invalid ObjectId")
+            raise HTTPException(status_code=422, detail="invalid id")
 
 
 class DBModel(BaseModel):

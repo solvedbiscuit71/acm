@@ -31,7 +31,7 @@ async def authenticate_user_id(user_auth: UserAuth) -> ObjectId:
     if validate_password(user_auth.password, user["hashed_password"]):
         return user["_id"]
     else:
-        raise HTTPException(status_code=401, detail="Invalid password")
+        raise HTTPException(status_code=401, detail="invalid password")
 
 
 async def authenticate_user_mobile(user_data: UserCreate) -> ObjectId:
@@ -39,4 +39,4 @@ async def authenticate_user_mobile(user_data: UserCreate) -> ObjectId:
     if validate_password(user_data.password, user["hashed_password"]):
         return user["_id"]
     else:
-        raise HTTPException(status_code=401, detail="Invalid password")
+        raise HTTPException(status_code=401, detail="invalid password")
