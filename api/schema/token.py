@@ -8,7 +8,7 @@ from schema.user import UserId
 from schema.database import ObjectId
 
 from jwt import encode, decode
-from jwt.exceptions import InvalidSignatureError
+from jwt.exceptions import InvalidSignatureError, DecodeError
 
 dotenv.load_dotenv()
 secret = os.getenv('SECRET')
@@ -33,6 +33,8 @@ def validate_token(token: str) -> ObjectId:
         payload = decode(jwt=token, key=secret, algorithms=[algorithm])
         return ObjectId(payload["_id"])
     except InvalidSignatureError:
+        raise HTTPException(status_code=401, detail="Invalid signature")
+    except DecodeError:
         raise HTTPException(status_code=401, detail="Invalid signature")
 
 
