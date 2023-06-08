@@ -2,20 +2,41 @@
     <title>ACM | Amrita Canteen Management</title>
 </svelte:head>
 
-<script>
+<script lang="ts">
     import Loader from "$lib/Loader.svelte";
     import { onMount } from "svelte";
 
-    onMount(() => {
+    async function verifyToken(token: string) {
+        const options = {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        };
+
+        const result = await fetch('http://localhost:8000/user/token', options)
+        return result.status
+    }
+
+    function redirect() {
+        setInterval(() => {
+            window.location.replace("/login")
+        }, 1000)
+    }
+
+    onMount(async () => {
         const token = localStorage.getItem("token");
         if (token) {
-            // verify token??
+            const status = await verifyToken(token)
+            switch (status) {
+                case 200:
+                    break
+                default:
+                    redirect()
+            }
             return
         } else {
-            // redirect /login
-            setInterval(() => {
-                window.location.replace("/login")
-            }, 1000)
+            redirect()
         }
     })
 </script>
