@@ -1,8 +1,15 @@
 # ignore files
+!.env.example
 .DS_Store
 .env
+.env.*
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
 
 # ignore folders
+.svelte-kit/
 .venv/
 __pycache__/
+build/
 node_modules/
+package/
