@@ -2,17 +2,31 @@
     <title>ACM | Amrita Canteen Management | Login</title>
 </svelte:head>
 
-<script>
+<script lang="ts">
     import Input from "$lib/Input.svelte";
     import Button from "$lib/Button.svelte";
+
+    interface User {
+        id: string;
+        mobile: string;
+        password: string;
+        name: string;
+    }
+
+    let user : User = {
+        id: '',
+        mobile: '',
+        password: '',
+        name: ''
+    }
 </script>
 
 <main>
     <h1>ACM</h1>
 
     <form>
-        <Input name="Mobile" type="text" />
-        <Input name="Password" type="password" />
+        <Input name="Mobile" type="text" bind:value={user.mobile} />
+        <Input name="Password" type="password" bind:value={user.password} />
 
         <Button style="align-self: center;">
             Login
