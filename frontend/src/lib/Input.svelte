@@ -8,7 +8,7 @@
 
 <label for="input-{name.toLowerCase()}">
     <span>{name.toUpperCase()}</span>
-    <input id="name" name="{name.toLowerCase()}" {type} on:input={() => value = ref.value}  bind:this={ref}>
+    <input id="{name.toLowerCase()}" name="{name.toLowerCase()}" {type} on:input={() => value = ref.value}  bind:this={ref}>
 </label>
 
 <style>
