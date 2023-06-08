@@ -62,3 +62,29 @@ uvicorn main:app --reload
 ```
 
 This runs the server at [localhost:8000](http://localhost:8000) and API documentation can be found at [localhost:8000/docs](http://localhost:8000/docs)
+
+# Frontend
+
+## Prerequisites
+
+- Nodejs
+- NPM
+
+Run the following command to install the node packages,
+```bash
+cd frontent
+npm install
+```
+
+## Run
+
+```bash
+# for development
+npm run dev
+
+# for production
+npm run build
+npm run preview
+```
+
+This runs the frontend server at [localhost:8080](http://localhost:8080)
