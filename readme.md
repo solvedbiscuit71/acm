@@ -79,12 +79,12 @@ npm install
 ## Run
 
 ```bash
-# for development
+# for development purpose
 npm run dev
 
-# for production
+# for production purpose
 npm run build
 npm run preview
 ```
 
-This runs the frontend server at [localhost:8080](http://localhost:8080)
+This runs the frontend server at [localhost:8080](http://localhost:8080) for both development and production
