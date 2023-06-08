@@ -61,6 +61,31 @@
         return data["access_token"]
     }
 
+    async function updateName() {
+        if (user.name.length == 0) {
+            alert("name is required")
+            return
+        }
+
+        const options = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: `{"name":"${user.name}"}`,
+        }
+
+        const result = await fetch('http://localhost:8000/user', options)
+        switch (result.status) {
+            case 200:
+                haveAccount = true
+                break
+            default:
+                alert("unhandled error occured");
+        }
+    }
+
     async function createUser() {
         if (!/^[0-9]{10}$/.test(user.mobile)) {
             alert("invalid mobile number");
@@ -89,16 +114,19 @@
 
         switch (result.status) {
             case 200:
+                token = await getToken(data["_id"]) || token
                 user.id = data["_id"];
                 break;
             case 409:
                 user.id = (await getId()) || user.id;
                 break;
+            default:
+                alert("unhandled error occured");
         }
     }
 
-    $: if (token) {
-        localStorage.setItem("token",token)
+    $: if (token && haveAccount) {
+        localStorage.setItem("token", token)
         window.location.replace("/")
     }
 </script>
@@ -114,7 +142,7 @@
         </h1>
 
         {#if user.id && !haveAccount}
-            <form class="update-name">
+            <form class="update-name" on:submit|preventDefault={updateName}>
                 <p>
                     <span>What should we</span>
                     <span>call you?</span>
