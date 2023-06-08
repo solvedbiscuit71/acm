@@ -44,12 +44,11 @@ python3 script.py --salt
 
 ### Environment variables
 
-For token generation, we need a SECRET, ALGORITHM and ORIGINS. add the following inside
+For token generation, we need a SECRET and ALGORITHM. add the following inside
 `schema/.env` file
 ```env
 SECRET=<your-secret>
 ALGORITHM=HS256
-ORIGINS=<list-of-origins>
 ```
 
 ## Run
@@ -80,12 +79,12 @@ npm install
 ## Run
 
 ```bash
-# for development
+# for development purpose
 npm run dev
 
-# for production
+# for production purpose
 npm run build
 npm run preview
 ```
 
-This runs the frontend server at [localhost:8080](http://localhost:8080)
+This runs the frontend server at [localhost:8080](http://localhost:8080) for both development and production
