@@ -9,6 +9,7 @@
         name: string;
     }
 
+    let haveAccount = false
     let user: User = {
         id: "",
         mobile: "",
@@ -22,14 +23,17 @@
 
         switch (result.status) {
             case 200:
+                haveAccount = true
                 return data["_id"];
             case 401:
                 alert("incorrect password");
                 return undefined;
+            default:
+                alert("unhandled error occured")
         }
     }
 
-    async function handleSubmit() {
+    async function createUser() {
         if (!/^[0-9]{10}$/.test(user.mobile)) {
             alert("invalid mobile number");
             return;
@@ -77,18 +81,28 @@
 </svelte:head>
 
 <main>
-    <h1>ACM</h1>
+    <section>
+    <h1 style:margin-top="{(user.id && !haveAccount) ? '2.625em' : '1.3125em'}">ACM</h1>
 
-    {#if user.id}
-        <div />
+    {#if user.id && !haveAccount}
+        <form class="update-name">
+            <p>
+                <span>What should we</span>
+                <span>call you?</span>
+            </p>
+
+            <Input name="Name" type="text" bind:value={user.name} nolabel placeHolder="Name" />
+            <Button style="align-self: end; font-size: 1.5rem;">></Button>
+        </form>
     {:else}
-        <form on:submit|preventDefault={handleSubmit}>
+        <form class="create-user" on:submit|preventDefault={createUser}>
             <Input name="Mobile" type="text" bind:value={user.mobile} />
             <Input name="Password" type="password" bind:value={user.password} />
 
             <Button style="align-self: center;">Login</Button>
         </form>
     {/if}
+    </section>
 </main>
 
 <style>
@@ -102,7 +116,7 @@
         color: #444444;
 
         font-size: 4rem;
-        margin: 1.3125em 0 0.5em;
+        margin: 0 0 0.5em;
 
         text-align: center;
     }
@@ -114,5 +128,24 @@
 
         width: 75%;
         margin: 0 auto;
+    }
+
+    p {
+        color: #535353;
+        text-align: center;
+
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    span {
+        display: block;
+
+        margin: 0;
+    }
+
+    span:last-of-type {
+        transform: translateY(-0.25em);
     }
 </style>
