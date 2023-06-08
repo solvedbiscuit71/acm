@@ -4,8 +4,8 @@ import dotenv
 from fastapi import HTTPException
 from bcrypt import hashpw, checkpw
 
-from schema.user import UserAuth
-from schema.database import get_user_by_id, count_user_by_id, ObjectId
+from schema.user import UserAuth, UserCreate
+from schema.database import get_user_by_id, get_user_by_mobile, count_user_by_id, ObjectId
 
 dotenv.load_dotenv()
 salt = os.getenv('SALT').encode()
@@ -26,9 +26,17 @@ async def authenticate_id(id: ObjectId) -> ObjectId:
         raise HTTPException(status_code=400, detail="id not found")
 
 
-async def authenticate_user(user_auth: UserAuth) -> ObjectId:
+async def authenticate_user_id(user_auth: UserAuth) -> ObjectId:
     user = await get_user_by_id(user_auth.id)
     if validate_password(user_auth.password, user["hashed_password"]):
+        return user["_id"]
+    else:
+        raise HTTPException(status_code=401, detail="Invalid password")
+
+
+async def authenticate_user_mobile(user_data: UserCreate) -> ObjectId:
+    user = await get_user_by_mobile(user_data.mobile)
+    if validate_password(user_data.password, user["hashed_password"]):
         return user["_id"]
     else:
         raise HTTPException(status_code=401, detail="Invalid password")

@@ -10,7 +10,7 @@ from schema.item import Item
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.database import database_connect, database_disconnect, ObjectId, Database
-from schema.security import hash_password, authenticate_user, authenticate_id
+from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_id
 from schema.cors import origins
 
 
@@ -23,6 +23,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/user", response_model=UserId)
+async def get_user(id: Annotated[ObjectId, Depends(authenticate_user_mobile)]):
+    return {"_id": id}
 
 
 @app.post("/user", response_model=UserId)
@@ -63,7 +68,7 @@ async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_da
 
 
 @app.post("/user/token", response_model=Token)
-async def create_token(id: Annotated[ObjectId, Depends(authenticate_user)]):
+async def create_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
     payload = {"_id": str(id)}
     return {"access_token": create_access_token(payload)}
 

@@ -51,6 +51,14 @@ async def get_user_by_id(id: ObjectId) -> dict:
     return user
 
 
+async def get_user_by_mobile(mobile: str) -> dict:
+    db = get_database()
+    user = await db.users.find_one({"mobile": mobile})
+    if not user:
+        raise HTTPException(status_code=400, detail="mobile not found")
+    return user
+
+
 async def count_user_by_id(id: ObjectId) -> int:
     db = get_database()
     count = await db.users.count_documents({"_id": id})
