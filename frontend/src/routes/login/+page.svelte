@@ -1,7 +1,3 @@
-<svelte:head>
-    <title>ACM | Amrita Canteen Management | Login</title>
-</svelte:head>
-
 <script lang="ts">
     import Input from "$lib/Input.svelte";
     import Button from "$lib/Button.svelte";
@@ -13,25 +9,72 @@
         name: string;
     }
 
-    let user : User = {
-        id: '',
-        mobile: '',
-        password: '',
-        name: ''
+    interface UserCreate {
+        mobile: string;
+        password: string;
+    }
+
+    let user: User = {
+        id: "",
+        mobile: "",
+        password: "",
+        name: "",
+    };
+
+    async function handleSubmit() {
+        if (!/^[0-9]{10}$/.test(user.mobile)) {
+            alert("invalid mobile number")
+            return
+        }
+
+        if (user.password.length < 8) {
+            alert("password must be atleast 8 characters")
+            return
+        }
+
+        let payload: UserCreate = {
+            mobile: user.mobile,
+            password: user.password,
+        };
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        };
+
+        let result = await fetch("http://localhost:8000/user", options)
+        let data = await result.json()
+
+        switch (result.status) {
+            case 200:
+                user.id = data["_id"]
+                break
+            case 409:
+                alert(data["detail"])
+                break
+        }
     }
 </script>
+
+<svelte:head>
+    <title>ACM | Amrita Canteen Management | Login</title>
+</svelte:head>
 
 <main>
     <h1>ACM</h1>
 
-    <form>
-        <Input name="Mobile" type="text" bind:value={user.mobile} />
-        <Input name="Password" type="password" bind:value={user.password} />
+    {#if user.id}
+        <div></div>
+    {:else}
+        <form on:submit|preventDefault={handleSubmit}>
+            <Input name="Mobile" type="text" bind:value={user.mobile} />
+            <Input name="Password" type="password" bind:value={user.password} />
 
-        <Button style="align-self: center;">
-            Login
-        </Button>
-    </form>
+            <Button style="align-self: center;">Login</Button>
+        </form>
+    {/if}
 </main>
 
 <style>
