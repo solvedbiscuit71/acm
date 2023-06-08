@@ -44,8 +44,8 @@ async def create_user(user_data: UserCreate, db: Database):
     return {"_id": result.inserted_id}
 
 
-@app.patch("/user/{id}", response_model=None)
-async def create_user(id: Annotated[ObjectId, Depends(authenticate_id)], user_data: UserUpdate, db: Database):
+@app.patch("/user", response_model=None)
+async def update_user(id: Annotated[ObjectId, Depends(authenticate_token)], user_data: UserUpdate, db: Database):
     payload = dict()
     if user_data.name:
         payload.update({"name": user_data.name})
