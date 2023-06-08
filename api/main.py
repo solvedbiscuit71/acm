@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from pymongo.results import InsertOneResult, UpdateResult
 
@@ -10,9 +11,18 @@ from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user, authenticate_id
+from schema.cors import origins
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/user", response_model=UserId)
