@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>ACM | Amrita Canteen Management | Login</title>
+</svelte:head>
+
 <script lang="ts">
     import Input from "$lib/Input.svelte";
     import Button from "$lib/Button.svelte";
@@ -130,10 +134,6 @@
         window.location.replace("/")
     }
 </script>
-
-<svelte:head>
-    <title>ACM | Amrita Canteen Management | Login</title>
-</svelte:head>
 
 <main>
     <section>
