@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,6 +9,7 @@ from pymongo.results import InsertOneResult, UpdateResult
 from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
+from schema.order import CartItem, Order, generate_id
 from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
@@ -107,6 +108,24 @@ async def fetch_categories(db: Database):
         categories.append(category)
 
     return categories
+
+# -------------------
+# Order
+# -------------------
+
+@app.post("/order")
+async def create_order(id_str: Annotated[str, Depends(authenticate_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
+    id = ObjectId(id_str)
+    new_order = {
+        "_id": await generate_id(),
+        "user_id": id,
+        "items": [item.dict() for item in items],
+        "total": total,
+        "status": "preparing"
+    }
+
+    result: InsertOneResult = await db.orders.insert_one(new_order)
+    return {"_id": result.inserted_id}
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 
