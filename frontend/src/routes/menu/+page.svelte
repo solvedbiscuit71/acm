@@ -36,6 +36,8 @@
     let selectedQuantity: number = 0
     let showMiniCart: boolean = false
 
+    let afterMount: boolean = false
+
     function handleSelect(item: Item) {
         const findCart = cart.find(cartItem => cartItem._id == item._id)
         if (findCart) {
@@ -73,19 +75,17 @@
                 const localCart = localStorage.getItem('cart')
                 if (localCart) {
                     cart = JSON.parse(localCart)
-                } else {
-                    cart = []
-                }
-
+                } 
                 break
             default:
                 alert("unhandled error occured")
         }
 
+        afterMount = true
         return
     })
 
-    $: if (browser && cart.length != 0) {
+    $: if (browser && afterMount) {
         localStorage.setItem('cart', JSON.stringify(cart))
     }
 </script>
