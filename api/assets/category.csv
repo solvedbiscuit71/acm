@@ -1,61 +1,61 @@
-name,category
-Plain Dosa,breakfast
-Podi Dosa,breakfast
-Ghee Dosa,breakfast
-Egg Dosa,breakfast
-Masala Dosa,breakfast
-Paneer Dosa,dinner
-Chicken Dosa,dinner
-Chapati,breakfast
-Paratta,breakfast
-Chill Paratta,lunch
-Aloo Paratta,lunch
-Chola Puri,lunch
-Gobi 65,snacks
-Meals,lunch
-Veg. Fried Rice,lunch
-Egg Fried Rice,lunch
-Chicken Fried Rice,lunch
-Veg. Noodles,lunch
-Egg Noodles,lunch
-Chicken Noodles,lunch
-Curd Rice,lunch
-Sambaar Rice,lunch
-Chicken Biriyani,lunch
-Samosa,snacks
-Veg. Puffs,snacks
-Paneer Puffs,snacks
-Egg Puffs,snacks
-Chicken Puffs,snacks
-Veg. Roll,snacks
-Chicken nuggets,snacks
-Chicken 65,snacks
-Prawn Masala,snacks
-Fish fry,snacks
-Paneer Butter Masala,lunch
-Mushroom Masala,lunch
-Pani Puri,snacks
-Bhel Puri,snacks
-Veg. Sandwich,snacks
-Chicken Sandwich,snacks
-Vada pav,snacks
-Kachodi,snacks
-Veg Burger,snacks
-Chicken Burger,snacks
-Bread Omelet,snacks
-Pineapple Juice,juice
-Orange Juice,juice
-Apple juice,juice
-Pomegranate Juice,juice
-Grape Juice,juice
-Mango Juice,juice
-Watermelon Juice,juice
-Chocolate Milkshake,juice
-Strawberry Milkshake,juice
-Mango Milkshake,juice
-Falooda,juice
-Soda Lime,juice
-Egg Roll,snacks
-Paneer Roll,snacks
-Chicken Roll,snacks
-Veg Roll1,snacks
+category,timein
+breakfast,8:30AM
+breakfast,8:30AM
+breakfast,8:30AM
+breakfast,8:30AM
+breakfast,8:30AM
+dinner,7:00PM
+dinner,7:00PM
+breakfast,8:30AM
+breakfast,8:30AM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+snacks,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+snacks,10:00AM
+snacks,10:00AM
+snacks,10:00AM
+snacks,10:00AM
+snacks,10:00AM
+snacks,10:00AM
+snacks,12:30PM
+snacks,12:30PM
+snacks,12:30PM
+snacks,12:30PM
+lunch,12:30PM
+lunch,12:30PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+juice,10:00AM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
+snacks,4:00PM
