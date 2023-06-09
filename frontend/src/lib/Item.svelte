@@ -15,17 +15,16 @@
         display: flex;
         flex-direction: column;
 
-        gap: 0.5em;
-        padding: 0.5em;
+        gap: 0.675em;
+        padding: 0.675em;
 
         border-radius: 4px;
         box-shadow: 0px 2px 4px 0px #0000003c;
-        width: min-content;
     }
 
     .item img {
-        width: 120px;
-        height: 120px;
+        width: 180px;
+        height: 180px;
 
         border-radius: 4px;
     }
@@ -35,13 +34,13 @@
     }
 
     .item h3 {
-        font-size: 100%;
+        font-size: 1.125rem;
         color: #444444;
     }
 
     .item p {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 1rem;
+        font-weight: 500;
         color: #565656;
     }
 </style>

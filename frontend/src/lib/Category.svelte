@@ -1,46 +1,16 @@
 <script lang="ts">
     import Item from "$lib/Item.svelte";
 
-    // dummy data
-    const items = [{
-            _id: "6482d2bb43e45c9542807219",
-            name: "Plain Dosa",
-            price: 50,
-            image_url: "/image/plain dosa.jpg",
-        },
-        {
-            _id: "6482d2bb43e45c954280721a",
-            name: "Podi Dosa",
-            price: 60,
-            image_url: "/image/podi dosa.jpg",
-        },
-        {
-            _id: "6482d2bb43e45c954280721b",
-            name: "Ghee Dosa",
-            price: 60,
-            image_url: "/image/ghee dosa.jpg",
-        },
-        {
-            _id: "6482d2bb43e45c954280721c",
-            name: "Egg Dosa",
-            price: 60,
-            image_url: "/image/egg dosa.jpg",
-        },
-        {
-            _id: "6482d2bb43e45c954280721d",
-            name: "Masala Dosa",
-            price: 60,
-            image_url: "/image/masala dosa.jpg",
-        },
-        {
-            _id: "6482d2bb43e45c9542807220",
-            name: "Chapati",
-            price: 40,
-            image_url: "/image/chapati.jpg",
-        },
-    ];
+    interface Item {
+        _id: number;
+        name: string;
+        price: number;
+        image_url: string;
+        category: string
+    }
 
-    export let name: string, starts_from: string;
+    const backend_url = "http://localhost:8000"
+    export let name: string, starts_from: string, items: Item[];
 </script>
 
 <section class="category">
@@ -54,7 +24,7 @@
 
     <div class="item-container">
         {#each items as item (item._id)}
-            <Item name="{item.name}" image_url="http://localhost:8000{item.image_url}" price="{item.price}"/>
+            <Item name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
         {/each}
     </div>
 </section>
@@ -65,8 +35,9 @@
     }
 
     .category-header h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 2rem;
+        font-weight: 700;
+        text-transform: capitalize;
 
         color: #444444;
         margin: 0;
