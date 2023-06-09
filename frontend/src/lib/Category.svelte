@@ -1,6 +1,8 @@
 <script lang="ts">
     import Item from "$lib/Item.svelte";
 
+    const backend_url = "http://localhost:8000"
+
     interface Item {
         _id: number;
         name: string;
@@ -9,8 +11,9 @@
         category: string
     }
 
-    const backend_url = "http://localhost:8000"
     export let name: string, starts_from: string, items: Item[];
+    export let handleSelect: (item: Item) => void;
+
 </script>
 
 <section class="category">
@@ -24,7 +27,7 @@
 
     <div class="item-container">
         {#each items as item (item._id)}
-            <Item name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
+            <Item on:mouseup={() => handleSelect(item)} name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
         {/each}
     </div>
 </section>

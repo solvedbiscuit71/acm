@@ -1,14 +1,22 @@
 <script lang="ts">
     import Counter from "$lib/Counter.svelte";
 
-    // dummy data!
-    let item = { _id: "647d594cbb2ff15f3e46ebd7", name: "Chicken 65", price: 60, image_url: "/image/chicken 65.webp"};
-    let count: number = 0
+    interface Item {
+        _id: number;
+        name: string;
+        price: number;
+        image_url: string;
+        category: string
+    }
 
-    export let hidden: boolean = true
+
+    export let handleClose: () => void
+    export let item: Item
+    export let quantity: number = 0
 </script>
 
-<section style:display={hidden ? "none": "block"}>
+<section>
+    <div class="bg" on:mouseup={handleClose}></div>
     <div class="item">
         <div class="img">
             <img
@@ -24,7 +32,7 @@
                     <p>₨ {item.price}</p>
                 </div>
             </div>
-            <Counter bind:value={count} />
+            <Counter bind:value={quantity} />
         </div>
     </div>
 </section>
@@ -38,6 +46,14 @@
         top: 0px;
 
         background-color: #57575759;
+    }
+
+    div.bg {
+        position: absolute;
+        width: 100vw;
+        min-height: calc(100vh - 64px - 200px);
+
+        top: 0px;
     }
 
     div.item {

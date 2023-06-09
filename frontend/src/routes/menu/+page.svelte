@@ -8,6 +8,8 @@
     import MiniCart from "$lib/MiniCart.svelte";
     import { onMount } from "svelte";
 
+    const backend_url = "http://localhost:8000"
+
     interface Item {
         _id: number;
         name: string;
@@ -16,14 +18,49 @@
         category: string
     }
 
+    interface CartItem extends Item {
+        quantity: number
+    }
+
     interface Category {
         _id: string;
         starts_from: string;
         items: Item[]
     }
 
-    const backend_url = "http://localhost:8000"
+    let cart: CartItem[] = []
     let categories: Category[] | null = null
+
+    let selectedItem: Item | null = null
+    let selectedQuantity: number = 0
+    let showMiniCart: boolean = false
+
+    function handleSelect(item: Item) {
+        const findCart = cart.find(cartItem => cartItem._id == item._id)
+        if (findCart) {
+            selectedQuantity = findCart.quantity
+        } else {
+            selectedQuantity = 0
+        }
+        selectedItem = item
+        showMiniCart = true
+    }
+
+    function handleClose() {
+        if (selectedItem) {
+            const cartItem = {...selectedItem, quantity: selectedQuantity}
+            const newCart = cart.filter(item => item._id != cartItem._id)
+
+            if (selectedQuantity > 0) {
+                cart = [cartItem, ...newCart]
+            } else {
+                cart = newCart
+            }
+        }
+
+        selectedItem = null
+        showMiniCart = false
+    }
 
     onMount(async () => {
         const result = await fetch(backend_url + "/menu")
@@ -39,7 +76,7 @@
         return
     })
 
-    $: console.log(categories)
+    $: localStorage.setItem('cart', JSON.stringify(cart))
 </script>
 
 <main>
@@ -52,13 +89,16 @@
 
     <section class="category-container">
         {#if categories}
-            {#each categories as category}
-                <Category name="{category._id}" starts_from="{category.starts_from}" items={category.items} />
+            {#each categories as category (category._id)}
+                <Category {handleSelect}  name="{category._id}" starts_from="{category.starts_from}" items={category.items} />
             {/each}
         {/if}
     </section>
 
-    <MiniCart />
+
+    {#if showMiniCart && selectedItem}
+        <MiniCart {handleClose} item={selectedItem} bind:quantity={selectedQuantity} />
+    {/if}
     <Footer active="home" />
 </main>
 

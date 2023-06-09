@@ -2,7 +2,7 @@
     export let name: string, price: number, image_url: string;
 </script>
 
-<div class="item">
+<div class="item" on:mouseup>
     <img src="{image_url}" alt="{name}">
     <div>
         <h3>{name}</h3>
