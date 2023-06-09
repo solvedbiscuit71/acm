@@ -9,6 +9,8 @@
     import { onMount } from "svelte";
     import { browser } from "$app/environment";
 
+    const backend_url = "http://localhost:8000"
+
     interface Item {
         _id: number;
         name: string;
@@ -55,6 +57,37 @@
         selectedItem = null
         showMiniCart = false
     }
+
+    async function handlePayment() {
+        if (cart.length != 0) {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    "items": cart,
+                    "total": total
+                })
+            };
+
+            const result = await fetch(`${backend_url}/order`, options)
+            switch (result.status) {
+                case 200:
+                    reset()
+                    break
+                default:
+                    alert("Unhandled error occurred")
+            }
+        }
+    }
+
+    function reset() {
+        cart = []
+        localStorage.removeItem("cart")
+        window.location.replace("/menu")
+    }
     
     onMount(() => {
         const localCart = localStorage.getItem('cart')
@@ -94,7 +127,7 @@
             </p>
 
             <div class="btn">
-                <Button style="font-size: 1.675rem;">Proceed to Pay</Button>
+                <Button on:click={handlePayment} style="font-size: 1.675rem;">Proceed to Pay</Button>
             </div>
         {/if}
     </section>
