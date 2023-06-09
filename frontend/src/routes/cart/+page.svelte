@@ -5,7 +5,9 @@
 <script lang="ts">
     import Button from "$lib/Button.svelte";
     import Footer from "$lib/Footer.svelte";
+    import MiniCart from "$lib/MiniCart.svelte";
     import { onMount } from "svelte";
+    import { browser } from "$app/environment";
 
     interface Item {
         _id: number;
@@ -20,15 +22,54 @@
     }
 
     let cart: CartItem[] = []
+
+    let selectedItem: Item | null = null
+    let selectedQuantity: number = 0
+    let showMiniCart: boolean = false
+    
+    let afterMount = false
+
+    function handleSelect(item: Item) {
+        const findCart = cart.find(cartItem => cartItem._id == item._id)
+        if (findCart) {
+            selectedQuantity = findCart.quantity
+        } else {
+            selectedQuantity = 0
+        }
+        selectedItem = item
+        showMiniCart = true
+    }
+
+    function handleClose() {
+        if (selectedItem) {
+            const cartItem = {...selectedItem, quantity: selectedQuantity}
+            const newCart = cart.filter(item => item._id != cartItem._id)
+
+            if (selectedQuantity > 0) {
+                cart = [cartItem, ...newCart]
+            } else {
+                cart = newCart
+            }
+        }
+
+        selectedItem = null
+        showMiniCart = false
+    }
     
     onMount(() => {
         const localCart = localStorage.getItem('cart')
         if (localCart) {
             cart = JSON.parse(localCart)
         }
+
+        afterMount = true
+        return
     })
 
     $: total = cart.reduce((sum, cartItem) => {return sum + cartItem.price * cartItem.quantity}, 0)
+    $: if (browser && afterMount) {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }
 </script>
 
 <main>
@@ -37,8 +78,8 @@
 
         {#if cart.length != 0}
             <ul>
-                {#each cart as item}
-                <li>
+                {#each cart as item (item._id)}
+                <li on:mouseup={() => handleSelect(item)}>
                     <h2>{item.name}</h2>
                     <div>
                         <span>₨ {item.price * item.quantity}</span>
@@ -58,6 +99,10 @@
         {/if}
     </section>
 
+    
+    {#if showMiniCart && selectedItem}
+        <MiniCart {handleClose} item={selectedItem} bind:quantity={selectedQuantity} />
+    {/if}
     <Footer active="cart" />
 </main>
 
