@@ -62,13 +62,10 @@ place-content: center;
 
 }
 .statusbar :nth-child(1){
-width: 80px; 
-}
-.statusbar :nth-child(2){
     border: 2px solid rgb(86, 86, 86);
     border-radius: 4px;
     color: #565656; 
-     
+    width: 80px;  
 }
 .statusbar :nth-child(4){
     border-right: 2px solid white;
@@ -76,6 +73,120 @@ width: 80px;
 }
 
 .orderitem1{
+    display: grid;
+    width: 280px;
+    height: 260px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    padding: 20px;
+    font-weight: 600;
+    align-content: space-between;
+}
+.orderitem1 :nth-child(2){
+    width: 110px;
+    height: 22px;
+    background-color: #D9D9D9;
+    border-radius: 4px;
+}
+.orderitem1 > .textcontainer :nth-child(2){
+    display: grid;
+    width: 64px;
+    height: 22px;
+    border: 1px solid  #FFCF44;
+    border-radius: 4px;
+    float:right;
+    font-weight: 600;
+    font-size: 10px;
+    place-content: center;
+    color:  #FFCF44;
+    background-color: white;
+}
+
+.orderitem1 :nth-child(3){
+    width: 220px;
+    height: 22px;
+    background-color: #D9D9D9;
+    border-radius: 4px;
+}
+
+.orderexpanded{
+    display: grid;
+    grid-template-areas: "item1 quantity1"
+                         "item2 quantity2"
+                         "item3 quantity3"
+                         "item4 quantity4" ;
+}
+.item1{
+grid-area: item1;
+width: 160px;
+height: 15px;
+border-radius: 4px;
+background-color: #EFEFEF;
+}
+.item2{
+width: 160px;
+height: 15px;
+border-radius: 4px;
+grid-area: item2;
+background-color: #EFEFEF;
+}
+.item3{
+width: 160px;
+height: 15px;
+border-radius: 4px;
+grid-area: item3;
+background-color: #EFEFEF;
+}
+.item4{
+width: 160px;
+height: 15px;
+border-radius: 4px;
+grid-area: item4;
+background-color: #EFEFEF;
+}
+.quantity1{
+width: 45px;
+height: 15px;
+border-radius: 4px;
+grid-area: quantity1;
+background-color: #EFEFEF;
+}
+.quantity2{
+width: 45px;
+height: 15px;
+border-radius: 4px;
+grid-area: quantity2;
+background-color: #EFEFEF;
+}
+.quantity3{
+width: 45px;
+height: 15px;
+border-radius: 4px;
+grid-area: quantity3;
+background-color: #EFEFEF;
+}
+.quantity4{
+width: 45px;
+height: 15px;
+border-radius: 4px;
+grid-area: quantity4;
+background-color: #EFEFEF;
+}
+.orderitem1 :nth-child(5){
+    width: 270px;
+    height: 25px;
+    display: flex;
+    place-content: center;
+    padding: 6px 0px;
+    border-width: 1px 1px 2px 2px;
+    border-style: solid;
+    border-color: #5B5B5B;
+    border-radius: 4px;
+    gap: 0.7em;
+    font-weight: 700;
+}
+
+.orderitems{
     display: grid;
     width: 280px;
     height: 140px;
@@ -103,33 +214,33 @@ width: 80px;
     display: grid;
     grid-row-gap: 20px;
 }
-.orderitem1 :nth-child(2){
+.orderitems :nth-child(2){
     width: 110px;
     height: 22px;
     background-color: #D9D9D9;
     border-radius: 4px;
 }
-.orderitem1 > .textcontainer :nth-child(2){
+.orderitems .textcontainer :nth-child(2){
     display: grid;
     width: 64px;
     height: 22px;
-    border: 1px solid  #FF9043;
+    border: 1px solid  #FFCF44;
     border-radius: 4px;
     float:right;
     font-weight: 600;
     font-size: 10px;
     place-content: center;
-    color:  #FF9043;
+    color:  #FFCF44;
     background-color: white;
 }
 
-.orderitem1 :nth-child(3){
+.orderitems :nth-child(3){
     width: 220px;
     height: 22px;
     background-color: #D9D9D9;
     border-radius: 4px;
 }
-.orderitem1 :nth-child(4){
+.orderitems :nth-child(4){
     width: 270px;
     height: 25px;
     display: flex;
