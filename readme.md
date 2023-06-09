@@ -32,19 +32,19 @@ virtual enviroment**
 
 ### CLI
 
-To load item's data into the database, run
+To load menu data into the database, run
 ```bash
-python3 script.py --item
-```
-
-To generate a bcrpyt salt, run
-```bash
-python3 script.py --salt
+python3 script.py --menu
 ```
 
 To load waiter's credentials into the database, run
 ```bash
 python3 script.py --waiter
+```
+
+To generate a bcrpyt salt, run
+```bash
+python3 script.py --salt
 ```
 
 ### Environment variables
