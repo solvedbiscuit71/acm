@@ -10,7 +10,7 @@ from schema.item import Item
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.database import database_connect, database_disconnect, ObjectId, Database
-from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_id
+from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
 
 
@@ -23,6 +23,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# -------------------
+# User Authentication
+# -------------------
 
 
 @app.get("/user", response_model=UserId)
@@ -74,8 +78,27 @@ async def create_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
 
 
 @app.get("/user/token")
-async def verify_token(id: Annotated[ObjectId, Depends(authenticate_token)]):
-    return {"_id": str(id)}
+async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+    return {"_id": id}
+
+# -------------------
+# Waiter
+# -------------------
+
+
+@app.post("/waiter/token", dependencies=[Depends(authenticate_waiter)], response_model=Token)
+async def create_waiter_token():
+    payload = {"_id": "waiter"}
+    return {"access_token": create_access_token(payload)}
+
+
+@app.get("/waiter/token")
+async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+    return {"_id": id}
+
+# -------------------
+# Menu
+# -------------------
 
 
 @app.get("/menu", response_model=list[Item])

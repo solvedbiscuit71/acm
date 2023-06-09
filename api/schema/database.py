@@ -66,5 +66,13 @@ async def count_user_by_id(id: ObjectId) -> int:
         raise HTTPException(status_code=400, detail="id not found")
     return count
 
+
+async def get_waiter_hashed_password(id: str) -> str:
+    db = get_database()
+    waiter = await db.waiter.find_one({"_id": id})
+    if not waiter:
+        raise HTTPException(status_code=500, detail="waiter not found")
+    return waiter["hashed_password"]
+
 db: Connection = Connection()
 Database = Annotated[AsyncIOMotorDatabase, Depends(get_database)]

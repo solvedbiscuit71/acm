@@ -6,8 +6,9 @@ from typing import Annotated
 from fastapi import HTTPException, Header
 from bcrypt import hashpw, checkpw
 
+from schema.waiter import Waiter
 from schema.user import UserAuth
-from schema.database import get_user_by_id, get_user_by_mobile, count_user_by_id, ObjectId
+from schema.database import get_user_by_id, get_user_by_mobile, count_user_by_id, get_waiter_hashed_password, ObjectId
 
 dotenv.load_dotenv()
 salt = os.getenv('SALT').encode()
@@ -40,5 +41,13 @@ async def authenticate_user_mobile(mobile: Annotated[str, Header()], password: A
     user = await get_user_by_mobile(mobile)
     if validate_password(password, user["hashed_password"]):
         return user["_id"]
+    else:
+        raise HTTPException(status_code=401, detail="invalid password")
+
+
+async def authenticate_waiter(waiter_auth: Waiter):
+    hashed_password = await get_waiter_hashed_password(waiter_auth.id)
+    if validate_password(waiter_auth.password, hashed_password):
+        return True
     else:
         raise HTTPException(status_code=401, detail="invalid password")
