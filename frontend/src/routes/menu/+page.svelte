@@ -7,6 +7,7 @@
     import Footer from "$lib/Footer.svelte";
     import MiniCart from "$lib/MiniCart.svelte";
     import { onMount } from "svelte";
+    import { browser } from "$app/environment";
 
     const backend_url = "http://localhost:8000"
 
@@ -68,6 +69,14 @@
             case 200:
                 const data = await result.json()
                 categories = data;
+                
+                const localCart = localStorage.getItem('cart')
+                if (localCart) {
+                    cart = JSON.parse(localCart)
+                } else {
+                    cart = []
+                }
+
                 break
             default:
                 alert("unhandled error occured")
@@ -76,7 +85,9 @@
         return
     })
 
-    $: localStorage.setItem('cart', JSON.stringify(cart))
+    $: if (browser && cart.length != 0) {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }
 </script>
 
 <main>
