@@ -53,7 +53,7 @@ place-content: center;
     color: #56565680;
 
 }
-.statusbar :nth-child(1){
+.statusbar :nth-child(2){
     border: 2px solid rgb(86, 86, 86);
     border-radius: 4px;
     color: #565656;
@@ -101,13 +101,13 @@ place-content: center;
     display: grid;
     width: 64px;
     height: 22px;
-    border: 1px solid  #FFCF44;
+    border: 1px solid  #FF9043;
     border-radius: 4px;
     float:right;
     font-weight: 600;
     font-size: 10px;
     place-content: center;
-    color:  #FFCF44;
+    color:  #FF9043;
     background-color: white;
 }
 
@@ -129,4 +129,3 @@ place-content: center;
     border-radius: 4px;
     gap: 0.7em;
 }
-
