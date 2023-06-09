@@ -119,12 +119,14 @@ place-content: center;
 }
 .orderitem1 :nth-child(4){
     width: 270px;
-    height: 35px;
+    height: 25px;
     display: flex;
     place-content: center;
-    
+    padding: 6px 0px;
     border-width: 1px 1px 2px 2px;
     border-style: solid;
     border-color: #5B5B5B;
     border-radius: 4px;
+    gap: 0.7em;
 }
+
