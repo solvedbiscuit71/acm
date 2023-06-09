@@ -6,8 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pymongo.results import InsertOneResult, UpdateResult
 
-from schema.item import Item
-from schema.category import Category
+from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.database import database_connect, database_disconnect, ObjectId, Database
@@ -101,20 +100,10 @@ async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
 # Menu
 # -------------------
 
-
-@app.get("/items", response_model=list[Item])
-async def fetch_items(db: Database):
-    items = []
-    async for item in db.items.find():
-        items.append(item)
-
-    return items
-
-
-@app.get("/categories", response_model=list[Category])
+@app.get("/menu", response_model=list[Category])
 async def fetch_categories(db: Database):
     categories = []
-    async for category in db.categories.find():
+    async for category in db.menu.find():
         categories.append(category)
 
     return categories
