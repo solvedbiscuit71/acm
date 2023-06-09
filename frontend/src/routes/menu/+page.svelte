@@ -1,6 +1,6 @@
 <script lang="ts">
     import Footer from "$lib/Footer.svelte";
-    import Item from "$lib/Item.svelte";
+    import MiniCart from "$lib/MiniCart.svelte";
 </script>
 
 <svelte:head>
@@ -8,6 +8,6 @@
 </svelte:head>
 
 <main>
-    <Item/>
+    <MiniCart/>
     <Footer active="home" />
 </main>
