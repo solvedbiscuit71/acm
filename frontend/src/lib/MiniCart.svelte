@@ -2,16 +2,12 @@
     import Counter from "$lib/Counter.svelte";
 
     // dummy data!
-    let item = {
-        _id: "647d594cbb2ff15f3e46ebd7",
-        name: "Chicken 65",
-        price: 60,
-        image_url: "/image/chicken 65.webp",
-        count: 0
-    };
+    let item = { _id: "647d594cbb2ff15f3e46ebd7", name: "Chicken 65", price: 60, image_url: "/image/chicken 65.webp", count: 0 };
+
+    export let hidden: boolean = true
 </script>
 
-<section>
+<section style:display={hidden ? "none": "block"}>
     <div class="item">
         <div class="img">
             <img
