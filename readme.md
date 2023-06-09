@@ -42,6 +42,11 @@ To generate a bcrpyt salt, run
 python3 script.py --salt
 ```
 
+To load waiter's credentials into the database, run
+```bash
+python3 script.py --waiter
+```
+
 ### Environment variables
 
 ```env
