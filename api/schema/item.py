@@ -7,4 +7,4 @@ class Item(DBModel):
     name: str
     price: int
     image_url: str
-    is_veg: bool
+    category: str
