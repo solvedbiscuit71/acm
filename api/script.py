@@ -1,14 +1,31 @@
 import sys
 import os
+import dotenv
 import asyncio
 
+from schema.security import hash_password
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from bcrypt import gensalt
 
-async def create_items():
-    client: AsyncIOMotorClient = AsyncIOMotorClient()
-    db: AsyncIOMotorDatabase = client["acm"]
+dotenv.load_dotenv("./schema/.env")
 
+client: AsyncIOMotorClient = AsyncIOMotorClient()
+
+
+async def create_waiter():
+    db: AsyncIOMotorDatabase = client["acm"]
+    await db.waiter.drop()
+
+    if os.getenv("WAITER_SECRET"):
+        await db.waiter.insert_one(
+            {"_id": "waiter", "hashed_password": hash_password(os.getenv("WAITER_SECRET"))})
+        print("Inserted waiter's secret")
+    else:
+        print("Set a WAITER_SECRET in schema/.env")
+
+
+async def create_items():
+    db: AsyncIOMotorDatabase = client["acm"]
     await db.items.drop()
 
     items = []
@@ -25,14 +42,13 @@ async def create_items():
     result = await db.items.insert_many(items)
     print(f"Inserted {len(result.inserted_ids)} items")
 
-    client.close()
-
 
 def create_salt():
     with open("schema/.env", "w") as file:
         file.write(f"SALT={gensalt().decode()}")
 
     print("Generated salt in schema/.env")
+
 
 async def main():
     arg = sys.argv[1:]
@@ -41,6 +57,9 @@ async def main():
         create_salt()
     if '--item' in arg or '--all' in arg:
         await create_items()
+    if '--waiter' in arg or '--all' in arg:
+        await create_waiter()
 
+    client.close()
 
 asyncio.run(main())
