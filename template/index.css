@@ -1,0 +1,55 @@
+body{
+    display: flex;
+    place-items: center;
+    flex-direction: column;
+    font-family: Poppins;
+}
+.orderbar{
+    width: 320px;
+    height: 42px;
+    background-color: #FD8736;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 60px;
+    color:white;
+    place-items: center;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.orderbar :nth-child(1){
+display: grid;
+place-content: center;
+}
+.orderbar :nth-child(2){
+
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    height: 50px;
+    border-radius: 4px;
+}
+.orderbar :nth-child(3){
+    display: grid;
+    place-content: center;
+}
+.statusbar{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+}
+.statusbar > div{
+    border: 2px solid rgba(86, 86, 86, 0.5);
+    border-radius: 4px;
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+}
+.statusbar :nth-child(1){
+    border: 2px solid rgb(86, 86, 86);
+    border-radius: 4px;
+}
+.statusbar :nth-child(4){
+    border-right: 2px solid white;
+}
