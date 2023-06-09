@@ -28,16 +28,32 @@ async def create_waiter():
         print("Set a WAITER_SECRET in schema/.env")
 
 
-async def create_items():
+async def create_menu():
     db: AsyncIOMotorDatabase = client["acm"]
+    await db.categories.drop()
     await db.items.drop()
 
+    categories = []
+    modifiers = [str, str]
+    with open(os.getcwd() + os.sep + "assets" + os.sep + "categories.csv", "r") as file:
+        headers = file.readline()[:-1].split(',')
+        headers[0] = "_id"
+
+        while category := file.readline()[:-1]:
+            category = category.split(',')
+            for i, mod in enumerate(modifiers):
+                category[i] = mod(category[i])
+            categories.append(dict(zip(headers, category)))
+
+    result = await db.categories.insert_many(categories)
+    print(f"Inserted {len(result.inserted_ids)} categories")
+
     items = []
-    modifiers = [str, int, str, lambda x: bool(x[:-1])]
+    modifiers = [str, int, str, str]
     with open(os.getcwd() + os.sep + "assets" + os.sep + "items.csv", "r") as file:
         headers = file.readline()[:-1].split(',')
 
-        while item := file.readline():
+        while item := file.readline()[:-1]:
             item = item.split(',')
             for i, mod in enumerate(modifiers):
                 item[i] = mod(item[i])
@@ -59,8 +75,8 @@ async def main():
 
     if '--salt' in arg or '--all' in arg:
         create_salt()
-    if '--item' in arg or '--all' in arg:
-        await create_items()
+    if '--menu' in arg or '--all' in arg:
+        await create_menu()
     if '--waiter' in arg or '--all' in arg:
         await create_waiter()
 
