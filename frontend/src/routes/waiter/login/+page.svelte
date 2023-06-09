@@ -7,6 +7,33 @@
     import Button from "$lib/Button.svelte";
 
     let password: string = ''
+    let token: string | null = null
+
+    async function handleSubmit() {
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: `{"password":"${password}"}`
+        };
+
+        const result = await fetch('http://localhost:8000/waiter/token', options)
+        const data = await result.json()
+        switch (result.status) {
+            case 200:
+                token = data["access_token"]
+                break
+            case 401:
+                alert("invalid password")
+                break
+            default:
+                alert("unhandled error occured");
+        }
+    }
+
+    $: if (token) {
+        localStorage.setItem("waiter-token", token)
+        window.location.replace("/waiter")
+    }
 </script>
 
 <main>
@@ -14,7 +41,7 @@
     <h1>ACM</h1>
     <p>waiter's portal</p>
 
-    <form>
+    <form on:submit|preventDefault={handleSubmit}>
     <Input name="password" type="password" bind:value={password}/>
     <Button style="align-self: center;">
         Login
