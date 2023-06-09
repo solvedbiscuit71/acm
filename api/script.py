@@ -70,6 +70,17 @@ async def create_menu():
     result = await db.menu.insert_many(categories)
     print(f"Inserted {result.inserted_ids} categories")
 
+async def create_order():
+    db: AsyncIOMotorDatabase = client["acm"]
+    await db.orders.drop()
+
+    try:
+        gen = {"_id": "item_id", "sequence_value": int(os.getenv("SEQ_START"))}
+        await db.orders.insert_one(gen)
+
+        print("Created sequence generator for orders")
+    except ValueError:
+        print("SEQ_START must be integer")
 
 
 def create_salt():
@@ -88,6 +99,8 @@ async def main():
         await create_menu()
     if '--waiter' in arg or '--all' in arg:
         await create_waiter()
+    if '--order' in arg or '--all' in arg:
+        await create_order()
 
     client.close()
 
