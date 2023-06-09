@@ -1,6 +1,6 @@
-,category,starts from
-0,breakfast,8:30 am
-1,dinner,6:00 pm
-2,lunch,12:30 pm
-3,snacks,4:00 pm
-4,juice,11:00 am
+category,starts_from
+breakfast,8:30 am
+dinner,6:00 pm
+lunch,12:30 pm
+snacks,4:00 pm
+juice,11:00 am
