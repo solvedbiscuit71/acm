@@ -30,8 +30,7 @@ async def create_waiter():
 
 async def create_menu():
     db: AsyncIOMotorDatabase = client["acm"]
-    await db.categories.drop()
-    await db.items.drop()
+    await db.menu.drop()
 
     categories = []
     modifiers = [str, str]
@@ -45,10 +44,9 @@ async def create_menu():
                 category[i] = mod(category[i])
             categories.append(dict(zip(headers, category)))
 
-    result = await db.categories.insert_many(categories)
-    print(f"Inserted {len(result.inserted_ids)} categories")
 
-    items = []
+    
+    items, id = [], 200
     modifiers = [str, int, str, str]
     with open(os.getcwd() + os.sep + "assets" + os.sep + "items.csv", "r") as file:
         headers = file.readline()[:-1].split(',')
@@ -57,10 +55,21 @@ async def create_menu():
             item = item.split(',')
             for i, mod in enumerate(modifiers):
                 item[i] = mod(item[i])
-            items.append(dict(zip(headers, item)))
 
-    result = await db.items.insert_many(items)
-    print(f"Inserted {len(result.inserted_ids)} items")
+            item = dict(zip(headers, item))
+            item.update({"_id": id})
+            id += 1
+
+            items.append(item)
+
+    for category in categories:
+        name = category["_id"]
+        category_items = [item for item in items if item["category"] == name]
+        category.update({"items": category_items})
+    
+    result = await db.menu.insert_many(categories)
+    print(f"Inserted {result.inserted_ids} categories")
+
 
 
 def create_salt():
