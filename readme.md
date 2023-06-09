@@ -44,11 +44,12 @@ python3 script.py --salt
 
 ### Environment variables
 
-For token generation, we need a SECRET and ALGORITHM. add the following inside
-`schema/.env` file
 ```env
-SECRET=<your-secret>
 ALGORITHM=HS256
+ORIGINS=<list-of-origins>
+SALT=<salt-for-hashing>
+SECRET=<jwt-secret>
+WAITER_SECRET=<password-for-waiter>
 ```
 
 ## Run
