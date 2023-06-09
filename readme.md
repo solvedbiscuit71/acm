@@ -42,10 +42,21 @@ To load waiter's credentials into the database, run
 python3 script.py --waiter
 ```
 
+To initiate the sequence generator for orders, run
+```bash
+python3 script.py --order
+```
+
 To generate a bcrpyt salt, run
 ```bash
 python3 script.py --salt
 ```
+
+Or, to run all the above command
+```bash
+python3 script.py --all
+```
+
 
 ### Environment variables
 
@@ -55,6 +66,7 @@ ORIGINS=<list-of-origins>
 SALT=<salt-for-hashing>
 SECRET=<jwt-secret>
 WAITER_SECRET=<password-for-waiter>
+SEQ_START=<integer>
 ```
 
 ## Run
