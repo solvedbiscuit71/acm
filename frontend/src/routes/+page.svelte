@@ -18,9 +18,9 @@
         return result.status
     }
 
-    function redirect() {
+    function redirect(path: string) {
         setInterval(() => {
-            window.location.replace("/login")
+            window.location.replace(path)
         }, 1000)
     }
 
@@ -30,13 +30,14 @@
             const status = await verifyToken(token)
             switch (status) {
                 case 200:
+                    redirect("/menu")
                     break
                 default:
-                    redirect()
+                    redirect("/login")
             }
             return
         } else {
-            redirect()
+            redirect("/login")
         }
     })
 </script>
