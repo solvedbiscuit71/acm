@@ -53,6 +53,11 @@
 <style>
     main {
         min-height: 100vh;
+
+        background-color: white;
+        background-image: url('/bg-top-colored.png'), url('/bg-bottom-colored.png');
+        background-repeat: no-repeat;
+        background-position: 0 0, 100% 100%;
     }
 
     section {

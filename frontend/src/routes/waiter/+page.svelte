@@ -59,6 +59,9 @@
 <style>
     main {
         background-color: #FD8736;
+        background-image: url('/bg-top.png'), url('/bg-bottom.png');
+        background-repeat: no-repeat;
+        background-position: 0 0, 100% 100%;
 
         width: 100vw;
         height: 100vh;
