@@ -5,7 +5,6 @@ from typing import Annotated
 from fastapi import HTTPException, Header
 from pydantic import BaseModel
 from schema.user import UserId
-from schema.database import ObjectId
 
 from jwt import encode, decode
 from jwt.exceptions import InvalidSignatureError, DecodeError
