@@ -1,7 +1,11 @@
+<script lang="ts">
+    export let value = 0
+</script>
+
 <div>
-    <img src="/icon-minus.png" alt="minus">
-    <span>0</span>
-    <img src="/icon-plus.png" alt="plus">
+    <img src="/icon-minus.png" alt="minus" on:mouseup={() => value = value > 0 ? value - 1 : value}>
+    <span>{value}</span>
+    <img src="/icon-plus.png" alt="plus" on:mouseup={() => value = value + 1}>
 </div>
 
 <style>

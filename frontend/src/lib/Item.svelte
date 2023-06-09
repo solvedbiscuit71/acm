@@ -7,7 +7,7 @@
         name: "Chicken 65",
         price: 60,
         image_url: "/image/chicken 65.webp",
-        is_veg: true,
+        count: 0
     };
 </script>
 
@@ -27,7 +27,7 @@
                     <p>₨ {item.price}</p>
                 </div>
             </div>
-            <Counter />
+            <Counter bind:value={item.count} />
         </div>
     </div>
 </section>
