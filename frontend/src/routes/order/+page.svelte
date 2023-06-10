@@ -26,7 +26,34 @@
         status: "preparing" | "ready" | "served";
     }
 
+    interface Status {
+        _id: number;
+        status: "preparing" | "ready" | "served";
+    }
+
     let orders: Order[] | null = null
+
+    async function refreshOrder() {
+        const options = {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        };
+
+        if (orders) {
+            const result = await fetch('http://localhost:8000/order/status', options) 
+            const data: Status[] = await result.json()
+
+            orders = orders.map(order => {
+                const orderStatus = data.find((x: Status) => x._id == order._id)
+                if (orderStatus) {
+                    return {...order, ...orderStatus}
+                } 
+                return order
+            })
+        }
+    }
 
     onMount(async () => {
         const options = {
@@ -41,6 +68,7 @@
             case 200:
                 const data = await result.json()
                 orders = data
+                setInterval(refreshOrder, 10000)
                 break
             case 401:
                 alert("Login to view order")
@@ -65,7 +93,7 @@
                         <Status status={order.status} />
                     </div>
                     <ul class="item-container">
-                        {#each order.items as item (item._id)}
+                        {#each order.items as item}
                         <li class="item">
                             <div>{item.name}</div>
                             <div>
