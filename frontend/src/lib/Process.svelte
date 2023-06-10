@@ -38,7 +38,12 @@
             switch (result.status) {
                 case 200:
                     orderPlaced = true
-                    dispatcher('orderPlaced')
+                    dispatcher("orderPlaced")
+                    break
+                case 401:
+                    alert("Login to place order")
+                    dispatcher("orderPlaced")
+                    window.location.replace("/login")
                     break
                 default:
                     alert("Unhandled error occurred")
