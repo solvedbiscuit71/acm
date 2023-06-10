@@ -5,6 +5,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Footer from "$lib/Footer.svelte";
+    import Status from "$lib/Status.svelte";
 
     interface Item {
         _id: number;
@@ -22,7 +23,7 @@
         _id: number;
         items: CartItem[];
         total: number;
-        status: string;
+        status: "preparing" | "ready" | "served";
     }
 
     let orders: Order[] | null = null
@@ -61,7 +62,7 @@
                 <li class="order">
                     <div class="order-info">
                         <div>Order no: <span>{order._id}</span></div>
-                        <div class="status">{order.status}</div>
+                        <Status status={order.status} />
                     </div>
                     <ul class="item-container">
                         {#each order.items as item (item._id)}
@@ -134,17 +135,6 @@
 
     .order-info div:first-of-type span {
         color: #444444;
-    }
-
-    .status {
-        color: #FD8736;
-        border: 1px solid #FD8736;
-        border-radius: 4px;
-        padding: 0.25em 0.5em;
-
-        text-transform: capitalize;
-        font-size: 0.875rem;
-        font-weight: 500;
     }
 
     .item-container {
