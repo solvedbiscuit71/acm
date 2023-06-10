@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo import DESCENDING
 
 from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_token
@@ -129,7 +130,7 @@ async def create_order(id: Annotated[str, Depends(authenticate_token)], items: l
 @app.get("/order", response_model=None)
 async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
     orders = []
-    async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}):
+    async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}).sort('_id', DESCENDING):
         orders.append(order)
 
     return orders
