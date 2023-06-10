@@ -6,10 +6,18 @@
     import Button from "$lib/Button.svelte";
     import Footer from "$lib/Footer.svelte";
     import MiniCart from "$lib/MiniCart.svelte";
+    import Payment from "$lib/Payment.svelte";
+    import Process from "$lib/Process.svelte";
+
     import { onMount } from "svelte";
     import { browser } from "$app/environment";
 
-    const backend_url = "http://localhost:8000"
+    const paymentMethods = [
+        {name: "Gpay", iconUrl: "/icon-gpay.png", handler: () => {selectedPaymentMethod = "Gpay"}, showLabel: false},
+        {name: "Paytm", iconUrl: "/icon-paytm.png", handler: () => {selectedPaymentMethod = "Paytm"}, showLabel: false},
+        {name: "Net Banking", iconUrl: "/icon-bank.png", handler: () => {selectedPaymentMethod = "Net Banking"}, showLabel: true},
+        {name: "Cash", iconUrl: "/icon-rupee.png", handler: () => {selectedPaymentMethod = "Cash"}, showLabel: true},
+    ]
 
     interface Item {
         _id: number;
@@ -22,6 +30,9 @@
     interface CartItem extends Item {
         quantity: number
     }
+
+    let proceedToPay: boolean = false
+    let selectedPaymentMethod: string | null = null
 
     let cart: CartItem[] = []
 
@@ -58,35 +69,9 @@
         showMiniCart = false
     }
 
-    async function handlePayment() {
-        if (cart.length != 0) {
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({
-                    "items": cart,
-                    "total": total
-                })
-            };
-
-            const result = await fetch(`${backend_url}/order`, options)
-            switch (result.status) {
-                case 200:
-                    reset()
-                    break
-                default:
-                    alert("Unhandled error occurred")
-            }
-        }
-    }
-
     function reset() {
         cart = []
         localStorage.removeItem("cart")
-        window.location.replace("/menu")
     }
     
     onMount(() => {
@@ -106,34 +91,42 @@
 </script>
 
 <main>
-    <section>
-        <h1>Cart</h1>
+    {#if proceedToPay && !selectedPaymentMethod}
+        <Payment {paymentMethods} />
+    {:else if selectedPaymentMethod}
+        <Process on:orderPlaced={reset} {cart} {total} />
+    {:else}
+        <section>
+            <h1>Cart</h1>
 
-        {#if cart.length != 0}
-            <ul>
-                {#each cart as item (item._id)}
-                <li on:mouseup={() => handleSelect(item)}>
-                    <h2>{item.name}</h2>
-                    <div>
-                        <span>₨ {item.price * item.quantity}</span>
-                        <span>{item.price} x {item.quantity}</span>
-                    </div>
-                </li>
-                {/each}
-            </ul>
+            {#if cart.length != 0}
+                <ul>
+                    {#each cart as item (item._id)}
+                    <li on:mouseup={() => handleSelect(item)}>
+                        <h2>{item.name}</h2>
+                        <div>
+                            <span>₨ {item.price * item.quantity}</span>
+                            <span>{item.price} x {item.quantity}</span>
+                        </div>
+                    </li>
+                    {/each}
+                </ul>
 
-            <p class="total">
-                Total <span>₨ {total}</span>
-            </p>
+                <p class="total">
+                    Total <span>₨ {total}</span>
+                </p>
 
-            <div class="btn">
-                <Button on:click={handlePayment} style="font-size: 1.675rem;">Proceed to Pay</Button>
-            </div>
-        {/if}
-    </section>
+                <div class="btn">
+                    <Button on:click={() => proceedToPay=true} style="font-size: 1.675rem;">Proceed to Pay</Button>
+                </div>
+            {:else}
+                <p class="empty">Cart is empty</p>
+            {/if}
+        </section>
+    {/if}
 
     
-    {#if showMiniCart && selectedItem}
+    {#if showMiniCart && selectedItem && !proceedToPay}
         <MiniCart {handleClose} item={selectedItem} bind:quantity={selectedQuantity} />
     {/if}
     <Footer active="cart" />
@@ -142,6 +135,11 @@
 <style>
     section {
         padding: 2rem;
+    }
+
+    p.empty {
+        font-size: 1rem;
+        color: #444444;
     }
 
     h1 {
