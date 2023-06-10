@@ -135,6 +135,7 @@
 <style>
     section {
         padding: 2rem;
+        margin-bottom: 64px;
     }
 
     p.empty {
