@@ -9,7 +9,7 @@ from pymongo.results import InsertOneResult, UpdateResult
 from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
-from schema.order import CartItem, Order, generate_id
+from schema.order import CartItem, generate_id
 from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
@@ -114,11 +114,10 @@ async def fetch_categories(db: Database):
 # -------------------
 
 @app.post("/order")
-async def create_order(id_str: Annotated[str, Depends(authenticate_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
-    id = ObjectId(id_str)
+async def create_order(id: Annotated[str, Depends(authenticate_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
     new_order = {
         "_id": await generate_id(),
-        "user_id": id,
+        "user_id": ObjectId(id),
         "items": [item.dict() for item in items],
         "total": total,
         "status": "preparing"
@@ -126,6 +125,14 @@ async def create_order(id_str: Annotated[str, Depends(authenticate_token)], item
 
     result: InsertOneResult = await db.orders.insert_one(new_order)
     return {"_id": result.inserted_id}
+
+@app.get("/order", response_model=None)
+async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+    orders = []
+    async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}):
+        orders.append(order)
+
+    return orders
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 
