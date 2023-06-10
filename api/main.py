@@ -135,6 +135,14 @@ async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Databa
 
     return orders
 
+@app.get("/order/status", response_model=None)
+async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+    orders = []
+    async for order in db.orders.find({"user_id": ObjectId(id)}, {"status": True}).sort('_id', DESCENDING):
+        orders.append(order)
+
+    return orders
+
 app.mount('/image', StaticFiles(directory="image"), name="image")
 
 app.add_event_handler("startup", database_connect)
