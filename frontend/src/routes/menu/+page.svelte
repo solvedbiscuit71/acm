@@ -49,7 +49,8 @@
         showMiniCart = true
     }
 
-    function handleClose() {
+    function handleUpdate() {
+        console.log('called update')
         if (selectedItem) {
             const cartItem = {...selectedItem, quantity: selectedQuantity}
             const newCart = cart.filter(item => item._id != cartItem._id)
@@ -59,7 +60,12 @@
             } else {
                 cart = newCart
             }
+            console.log(cart)
         }
+    }
+
+    function handleClose() {
+        handleUpdate()
 
         selectedItem = null
         showMiniCart = false
@@ -108,7 +114,7 @@
 
 
     {#if showMiniCart && selectedItem}
-        <MiniCart {handleClose} item={selectedItem} bind:quantity={selectedQuantity} />
+        <MiniCart {handleUpdate} {handleClose} item={selectedItem} bind:quantity={selectedQuantity} />
     {/if}
     <Footer active="home" />
 </main>

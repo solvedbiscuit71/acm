@@ -1,5 +1,6 @@
 <script lang="ts">
     import Counter from "$lib/Counter.svelte";
+    import { afterUpdate } from "svelte";
 
     interface Item {
         _id: number;
@@ -11,8 +12,14 @@
 
 
     export let handleClose: () => void
+    export let handleUpdate: () => void
     export let item: Item
     export let quantity: number = 0
+
+    $: {
+        handleUpdate()
+        quantity // dependencies
+    }
 </script>
 
 <section>
