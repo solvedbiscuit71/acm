@@ -8,7 +8,7 @@ from pymongo.results import InsertOneResult, UpdateResult
 from pymongo import DESCENDING
 
 from schema.menu import Category
-from schema.token import Token, create_access_token, authenticate_token
+from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.order import CartItem, generate_id
 from schema.database import database_connect, database_disconnect, ObjectId, Database
@@ -51,7 +51,7 @@ async def create_user(user_data: UserCreate, db: Database):
 
 
 @app.patch("/user", response_model=None)
-async def update_user(id: Annotated[ObjectId, Depends(authenticate_token)], user_data: UserUpdate, db: Database):
+async def update_user(id: Annotated[ObjectId, Depends(authenticate_access_token)], user_data: UserUpdate, db: Database):
     payload = dict()
     if user_data.name:
         payload.update({"name": user_data.name})
@@ -76,11 +76,11 @@ async def update_user(id: Annotated[ObjectId, Depends(authenticate_token)], user
 @app.post("/user/token", response_model=Token)
 async def create_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
     payload = {"_id": str(id)}
-    return {"access_token": create_access_token(payload)}
+    return {"access_token": create_access_token(payload, 'access')}
 
 
 @app.get("/user/token")
-async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+async def verify_token(id: Annotated[str, Depends(authenticate_access_token)]):
     return {"_id": id}
 
 # -------------------
@@ -91,11 +91,11 @@ async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
 @app.post("/waiter/token", dependencies=[Depends(authenticate_waiter)], response_model=Token)
 async def create_waiter_token():
     payload = {"_id": "waiter"}
-    return {"access_token": create_access_token(payload)}
+    return {"access_token": create_access_token(payload, 'waiter')}
 
 
 @app.get("/waiter/token")
-async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+async def verify_token(id: Annotated[str, Depends(authenticate_waiter_token)]):
     return {"_id": id}
 
 # -------------------
@@ -115,7 +115,7 @@ async def fetch_categories(db: Database):
 # -------------------
 
 @app.post("/order")
-async def create_order(id: Annotated[str, Depends(authenticate_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
+async def create_order(id: Annotated[str, Depends(authenticate_access_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
     new_order = {
         "_id": await generate_id(),
         "user_id": ObjectId(id),
@@ -128,7 +128,7 @@ async def create_order(id: Annotated[str, Depends(authenticate_token)], items: l
     return {"_id": result.inserted_id}
 
 @app.get("/order", response_model=None)
-async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db: Database):
     orders = []
     async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}).sort('_id', DESCENDING):
         orders.append(order)
@@ -136,7 +136,7 @@ async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Databa
     return orders
 
 @app.get("/order/status", response_model=None)
-async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db: Database):
     orders = []
     async for order in db.orders.find({"user_id": ObjectId(id)}, {"status": True}).sort('_id', DESCENDING):
         orders.append(order)
