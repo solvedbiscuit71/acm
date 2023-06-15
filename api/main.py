@@ -15,7 +15,7 @@ from schema.database import database_connect, database_disconnect, ObjectId, Dat
 from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
 
-FILTERS = ('placed', 'preparing', 'ready', 'served')
+STATUS = ('placed', 'preparing', 'ready', 'served')
 
 app = FastAPI()
 
@@ -147,8 +147,8 @@ async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db:
 
 @app.get("/order/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
 async def get_orders_by_filter(filter: Annotated[str, Header()], db: Database):
-    if filter not in FILTERS:
-        HTTPException(status_code=400, detail=f"Invalid filter, filter should be one of ({repr(FILTERS)})")
+    if filter not in STATUS:
+        raise HTTPException(status_code=400, detail=f"Filter should be one of {STATUS}")
     else:
         orders = []
         pipeline = [
@@ -169,6 +169,19 @@ async def get_orders_by_filter(filter: Annotated[str, Header()], db: Database):
 
         return orders
     pass
+
+@app.patch("/order/{id}", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
+async def get_orders_by_filter(id: int, status: Annotated[str, Header()], db: Database):
+    if status not in STATUS:
+        raise HTTPException(status_code=400, detail=f"Status should be one of {STATUS}")
+    else:
+        result: UpdateResult = await db.orders.update_one({"_id": id}, {"$set": {"status": status}})
+        if result.modified_count > 0:
+            return {"message": "success"}
+        elif result.matched_count > 0:
+            return {"message": "no modification"}
+        else:
+            raise HTTPException(status_code=400, detail="Invalid id")
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 
