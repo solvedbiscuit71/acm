@@ -31,6 +31,12 @@
         total: number;
     }
 
+    const nextStatus = {
+        placed: "preparing",
+        preparing: "ready",
+        ready: "served",
+    }
+
     let filter: FilterType = 'placed'
 
     let orders: Order[]
@@ -42,13 +48,36 @@
                 headers: {
                     Filter: filter,
                     Authorization: `Bearer ${localStorage.getItem("waiter-token")}`,
-                }
+                },
             };
 
             const result = await fetch('http://localhost:8000/order/filter', options)
             const data = await result.json()
 
             return data
+        }
+    }
+
+    async function updateOrder(orderId: number) {
+        if (filter == 'served' || !browser) {
+            return
+        }
+
+        const options = {
+            method: 'PATCH',
+            headers: {
+                Status: nextStatus[filter],
+                Authorization: `Bearer ${localStorage.getItem("waiter-token")}`,
+            },
+        };
+
+        const result = await fetch(`http://localhost:8000/order/${orderId}`, options)
+        switch (result.status) {
+            case 200:
+                changeFilter(filter)
+                break
+            default:
+                alert("Unhandled error occured")
         }
     }
 
@@ -99,7 +128,7 @@
                     </ul>
 
                     {#if filter != 'served'}
-                        <UpdateButton {filter} />
+                        <UpdateButton on:click={() => updateOrder(order._id)} {filter} />
                     {/if}
                 </li>
                 {/each}

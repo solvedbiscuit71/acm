@@ -19,7 +19,7 @@
     export let filter: FilterType
 </script>
 
-<button>
+<button on:click>
     <img src="{filterInfo[filter].imageUrl}" alt="Tick icon">
     {filterInfo[filter].textContent}
 </button>
