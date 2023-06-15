@@ -3,9 +3,18 @@
 </svelte:head>
 
 <script lang="ts">
+    import Filter from "$lib/waiter/Filter.svelte";
     import Navbar from "$lib/waiter/Navbar.svelte";
-
-
 </script>
 
-<Navbar/>
+<main>
+    <Navbar/>
+
+    <Filter/>
+</main>
+
+<style>
+    main {
+        min-height: 100vh;
+    }
+</style>
