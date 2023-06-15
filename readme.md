@@ -65,8 +65,9 @@ ALGORITHM=HS256
 ORIGINS=<list-of-origins>
 SALT=<salt-for-hashing>
 SECRET=<jwt-secret>
-WAITER_SECRET=<password-for-waiter>
+WAITER_SECRET=<jwt-secret-for-waiter>
 SEQ_START=<integer>
+WAITER_PASSWORD=<password-for-waiter>
 ```
 
 ## Run

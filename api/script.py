@@ -16,16 +16,17 @@ async def create_waiter():
     db: AsyncIOMotorDatabase = client["acm"]
     await db.waiter.drop()
 
-    password = os.getenv("WAITER_SECRET")
+    password = os.getenv("WAITER_PASSWORD")
     if password:
         if len(password) < 8:
-            print("WAITER_SECRET must be atleast 8 characters")
+            print("WAITER_PASSWORD must be atleast 8 characters")
+            return
 
         await db.waiter.insert_one(
             {"_id": "waiter", "hashed_password": hash_password(os.getenv("WAITER_SECRET"))})
         print("Inserted waiter's secret")
     else:
-        print("Set a WAITER_SECRET in schema/.env")
+        print("Set a WAITER_PASSWORD in schema/.env")
 
 
 async def create_menu():
