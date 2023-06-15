@@ -70,7 +70,7 @@
             case 200:
                 const data = await result.json()
                 orders = data
-                setInterval(refreshOrder, 10000)
+                setInterval(refreshOrder, 2000)
                 break
             case 401:
                 alert("Login to view order")
