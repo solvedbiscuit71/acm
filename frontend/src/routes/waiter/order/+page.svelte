@@ -8,6 +8,7 @@
     import Status from "$lib/Status.svelte";
     import { browser } from "$app/environment";
     import UpdateButton from "$lib/waiter/UpdateButton.svelte";
+    import { onMount } from "svelte";
 
     type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
 
@@ -51,17 +52,26 @@
         }
     }
 
-    $: if (filter) {
-        (async function() {
-            orders = await fetchOrder()
-        })()
+    function changeFilter(newFilter: FilterType) {
+        filter = newFilter
+        orders = []
+
+        setTimeout(() => {
+            fetchOrder().then(data => orders = data)
+        }, 0)
     }
+
+    onMount(() => {
+        setTimeout(() => {
+            fetchOrder().then(data => orders = data)
+        }, 0)
+    })
 </script>
 
 <main>
     <Navbar/>
 
-    <Filter bind:filter />
+    <Filter {filter} handleClick={changeFilter} />
 
     <section>
         {#if orders && orders.length != 0}
@@ -88,9 +98,9 @@
                         {/each}
                     </ul>
 
-                    <UpdateButton>
-                        Mark as preparing
-                    </UpdateButton>
+                    {#if filter != 'served'}
+                        <UpdateButton {filter} />
+                    {/if}
                 </li>
                 {/each}
             </ul>

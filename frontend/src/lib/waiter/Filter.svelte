@@ -2,14 +2,15 @@
     type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
 
     export let filter: FilterType
+    export let handleClick: (filter: FilterType) => void
 </script>
 
 <section>
     <ul>
-        <li class:active="{filter == "placed"}" on:mouseup={() => filter = "placed"}>New orders</li>
-        <li class:active="{filter == "preparing"}" on:mouseup={() => filter = "preparing"}>Preparing</li>
-        <li class:active="{filter == "ready"}" on:mouseup={() => filter = "ready"}>Ready</li>
-        <li class:active="{filter == "served"}" on:mouseup={() => filter = "served"}>Served</li>
+        <li class:active="{filter == "placed"}" on:mouseup={() => handleClick("placed")}>New orders</li>
+        <li class:active="{filter == "preparing"}" on:mouseup={() => handleClick("preparing")}>Preparing</li>
+        <li class:active="{filter == "ready"}" on:mouseup={() => handleClick("ready")}>Ready</li>
+        <li class:active="{filter == "served"}" on:mouseup={() => handleClick("served")}>Served</li>
     </ul>
 </section>
 

@@ -1,6 +1,27 @@
+<script lang="ts">
+    type FilterType = 'placed' | 'preparing' | 'ready'
+
+    const filterInfo = {
+        placed: {
+            imageUrl: "/icon-orange-tick.png",
+            textContent: "Mark as Preparing",
+        },
+        preparing: {
+            imageUrl: "/icon-green-tick.png",
+            textContent: "Mark as Ready",
+        },
+        ready: {
+            imageUrl: "/icon-purple-tick.png",
+            textContent: "Mark as Served",
+        },
+    }
+
+    export let filter: FilterType
+</script>
+
 <button>
-    <img src="/icon-orange-tick.png" alt="circle with tick">
-    <slot></slot>
+    <img src="{filterInfo[filter].imageUrl}" alt="Tick icon">
+    {filterInfo[filter].textContent}
 </button>
 
 <style>
