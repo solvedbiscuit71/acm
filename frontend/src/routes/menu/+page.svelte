@@ -50,7 +50,6 @@
     }
 
     function handleUpdate() {
-        console.log('called update')
         if (selectedItem) {
             const cartItem = {...selectedItem, quantity: selectedQuantity}
             const newCart = cart.filter(item => item._id != cartItem._id)
@@ -60,7 +59,6 @@
             } else {
                 cart = newCart
             }
-            console.log(cart)
         }
     }
 
