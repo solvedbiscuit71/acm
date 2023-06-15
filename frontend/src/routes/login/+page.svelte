@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>ACM | Amrita Canteen Management | Login</title>
+</svelte:head>
+
 <script lang="ts">
     import Input from "$lib/Input.svelte";
     import Button from "$lib/Button.svelte";
@@ -131,13 +135,9 @@
     }
 </script>
 
-<svelte:head>
-    <title>ACM | Amrita Canteen Management | Login</title>
-</svelte:head>
-
 <main>
     <section>
-        <h1 style:margin-top={user.id && !haveAccount ? "2.625em" : "1.3125em"}>
+        <h1>
             ACM
         </h1>
 
@@ -177,6 +177,14 @@
         height: 100vh;
 
         background-color: white;
+        background-image: url('/bg-top-colored.png'), url('/bg-bottom-colored.png');
+        background-repeat: no-repeat;
+        background-position: 0 0, 100% 100%;
+    }
+
+    section {
+        position: relative;
+        top: 18vh;
     }
 
     h1 {

@@ -1,16 +1,18 @@
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo import DESCENDING
 
-from schema.item import Item
+from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_token
 from schema.user import UserId, UserCreate, UserUpdate
+from schema.order import CartItem, generate_id
 from schema.database import database_connect, database_disconnect, ObjectId, Database
-from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_id
+from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
 
 
@@ -23,6 +25,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# -------------------
+# User Authentication
+# -------------------
 
 
 @app.get("/user", response_model=UserId)
@@ -74,18 +80,68 @@ async def create_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
 
 
 @app.get("/user/token")
-async def verify_token(id: Annotated[ObjectId, Depends(authenticate_token)]):
-    return {"_id": str(id)}
+async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+    return {"_id": id}
+
+# -------------------
+# Waiter
+# -------------------
 
 
-@app.get("/menu", response_model=list[Item])
-async def menu(db: Database):
-    items = []
-    async for item in db.items.find():
-        items.append(item)
+@app.post("/waiter/token", dependencies=[Depends(authenticate_waiter)], response_model=Token)
+async def create_waiter_token():
+    payload = {"_id": "waiter"}
+    return {"access_token": create_access_token(payload)}
 
-    return items
 
+@app.get("/waiter/token")
+async def verify_token(id: Annotated[str, Depends(authenticate_token)]):
+    return {"_id": id}
+
+# -------------------
+# Menu
+# -------------------
+
+@app.get("/menu", response_model=list[Category])
+async def fetch_categories(db: Database):
+    categories = []
+    async for category in db.menu.find():
+        categories.append(category)
+
+    return categories
+
+# -------------------
+# Order
+# -------------------
+
+@app.post("/order")
+async def create_order(id: Annotated[str, Depends(authenticate_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
+    new_order = {
+        "_id": await generate_id(),
+        "user_id": ObjectId(id),
+        "items": [item.dict() for item in items],
+        "total": total,
+        "status": "preparing"
+    }
+
+    result: InsertOneResult = await db.orders.insert_one(new_order)
+    return {"_id": result.inserted_id}
+
+@app.get("/order", response_model=None)
+async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+    orders = []
+    async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}).sort('_id', DESCENDING):
+        orders.append(order)
+
+    return orders
+
+@app.get("/order/status", response_model=None)
+async def get_orders(id: Annotated[str, Depends(authenticate_token)], db: Database):
+    orders = []
+    async for order in db.orders.find({"user_id": ObjectId(id)}, {"status": True}).sort('_id', DESCENDING):
+        orders.append(order)
+
+    return orders
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 

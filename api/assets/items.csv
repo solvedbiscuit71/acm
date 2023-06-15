@@ -1,61 +1,61 @@
-name,price,image_url,is_veg,category
-Plain Dosa,50,/image/plain dosa.jpg,True,breakfast
-Podi Dosa,60,/image/podi dosa.jpg,True,breakfast
-Ghee Dosa,60,/image/ghee dosa.jpg,True,breakfast
-Egg Dosa,60,/image/egg dosa.jpg,False,breakfast
-Masala Dosa,60,/image/masala dosa.jpg,True,breakfast
-Paneer Dosa,70,/image/paneer dosa.jpg,True,dinner
-Chicken Dosa,70,/image/chicken dosa.jpg,False,dinner
-Chapati,40,/image/chapati.jpg,True,breakfast
-Paratta,40,/image/paratta.jpg,True,lunch
-Chill Paratta,70,/image/chilli parotta.jpg,True,lunch
-Aloo Paratta,50,/image/aloo paratha.jpg,True,lunch
-Chola Puri,50,/image/chola puri.jpg,True,lunch
-Gobi 65,100,/image/gobi 65.jpeg,True,snacks
-Meals,40,/image/meals.jpg,True,lunch
-Veg. Fried Rice,60,/image/veg fried rice.jpg,True,lunch
-Egg Fried Rice,70,/image/egg fried rice.jpg,False,lunch
-Chicken Fried Rice,100,/image/chicken fried rice.webp,False,lunch
-Veg. Noodles,60,/image/veg noodles.jpg,True,lunch
-Egg Noodles,70,/image/egg noodles.jpg,False,lunch
-Chicken Noodles,100,/image/chicken noodles.jpg,False,lunch
-Curd Rice,40,/image/curd rice.jpg,True,lunch
-Sambaar Rice,40,/image/sambaar rice.jpg,True,lunch
-Chicken Biriyani,130,/mage/chicken biryani.jpg,False,lunch
-Samosa,15,/image/samosa.webp,True,snacks
-Veg. Puffs,15,/image/veg puff.jpg,True,snacks
-Paneer Puffs,25,/image/paneer puff.jpg,True,snacks
-Egg Puffs,20,/image/egg puff.jpg,False,snacks
-Chicken Puffs,25,/image/chicken puffs.jpg,False,snacks
-Veg. Roll,20,/image/veg roll.jpg,True,snacks
-Chicken nuggets,100,/image/chicken nuggets.webp,False,snacks
-Chicken 65,60,/image/chicken 65.webp,False,snacks
-Prawn Masala,100,/mage/prawn masala.jpg,False,snacks
-Fish fry,80,/image/fish fry.jpg,False,snacks
-Paneer Butter Masala,100,/image/paneer butter masala.webp,True,lunch
-Mushroom Masala,100,/image/mushroom masala.jpg,True,lunch
-Pani Puri,30,/image/pani puri.jpg,True,snacks
-Bhel Puri,30,/image/bhel puri.jpg,True,snacks
-Veg. Sandwich,40,/image/veg sandwich.jpg,True,snacks
-Chicken Sandwich,70,/image/chicken sandwich.jpg,True,snacks
-Vada pav,30,/image/vada pav.jpg,True,snacks
-Kachodi,30,/image/kachodi.jpg,True,snacks
-Veg Burger,50,/image/veg burger.webp,True,snacks
-Chicken Burger,70,/image/chicken burger.jpg,False,snacks
-Bread Omelet,30,/image/bread omelette.webp,False,snacks
-Pineapple Juice,40,/image/pineapple juice.jpg,True,juice
-Orange Juice,40,/image/orange juice.jpeg,True,juice
-Apple juice,40,/image/apple juice.jpg,True,juice
-Pomegranate Juice,40,/image/pomegranate juice.jpg,True,juice
-Grape Juice,40,/image/grape juice.jpg,True,juice
-Mango Juice,40,/image/mango juice.jpg,True,juice
-Watermelon Juice,40,/image/watermelon juice.jpg,True,juice
-Chocolate Milkshake,70,/image/chocolate milkshake.jpg,True,juice
-Strawberry Milkshake,70,/image/strawberry milkshake.jpg,True,juice
-Mango Milkshake,70,/image/mango milkshake.jpg,True,juice
-Falooda,100,/image/falooda.jpg,True,juice
-Soda Lime,30,/image/soda lime.jpeg,True,juice
-Egg Roll,70,/image/egg roll.webp,False,snacks
-Paneer Roll,70,/image/paneer roll.jpg,True,snacks
-Chicken Roll,80,/image/chicken roll.jpg,False,snacks
-Veg Roll1,60,/image/veg roll1.jpg,True,snacks
+name,price,image_url,category
+Plain Dosa,50,/image/plain dosa.jpg,breakfast
+Podi Dosa,60,/image/podi dosa.jpg,breakfast
+Ghee Dosa,60,/image/ghee dosa.jpg,breakfast
+Egg Dosa,60,/image/egg dosa.jpg,breakfast
+Masala Dosa,60,/image/masala dosa.jpg,breakfast
+Paneer Dosa,70,/image/paneer dosa.jpg,dinner
+Chicken Dosa,70,/image/chicken dosa.jpg,dinner
+Chapati,40,/image/chapati.jpg,breakfast
+Paratta,40,/image/paratta.jpg,lunch
+Chill Paratta,70,/image/chilli parotta.jpg,lunch
+Aloo Paratta,50,/image/aloo paratha.jpg,lunch
+Chola Puri,50,/image/chola puri.jpg,lunch
+Gobi 65,100,/image/gobi 65.jpeg,snacks
+Meals,40,/image/meals.jpg,lunch
+Veg. Fried Rice,60,/image/veg fried rice.jpg,lunch
+Egg Fried Rice,70,/image/egg fried rice.jpg,lunch
+Chicken Fried Rice,100,/image/chicken fried rice.webp,lunch
+Veg. Noodles,60,/image/veg noodles.jpg,lunch
+Egg Noodles,70,/image/egg noodles.jpg,lunch
+Chicken Noodles,100,/image/chicken noodles.jpg,lunch
+Curd Rice,40,/image/curd rice.jpg,lunch
+Sambaar Rice,40,/image/sambaar rice.jpg,lunch
+Chicken Biriyani,130,/image/chicken biryani.jpg,lunch
+Samosa,15,/image/samosa.webp,snacks
+Veg. Puffs,15,/image/veg puff.jpg,snacks
+Paneer Puffs,25,/image/paneer puff.jpg,snacks
+Egg Puffs,20,/image/egg puff.jpg,snacks
+Chicken Puffs,25,/image/chicken puffs.jpg,snacks
+Veg. Roll,20,/image/veg roll.jpg,snacks
+Chicken nuggets,100,/image/chicken nuggets.webp,snacks
+Chicken 65,60,/image/chicken 65.webp,snacks
+Prawn Masala,100,/image/prawn masala.jpg,snacks
+Fish fry,80,/image/fish fry.jpg,snacks
+Paneer Butter Masala,100,/image/paneer butter masala.webp,lunch
+Mushroom Masala,100,/image/mushroom masala.jpg,lunch
+Pani Puri,30,/image/pani puri.jpg,snacks
+Bhel Puri,30,/image/bhel puri.jpg,snacks
+Veg. Sandwich,40,/image/veg sandwich.jpg,snacks
+Chicken Sandwich,70,/image/chicken sandwich.jpg,snacks
+Vada pav,30,/image/vada pav.jpg,snacks
+Kachodi,30,/image/kachodi.jpg,snacks
+Veg Burger,50,/image/veg burger.webp,snacks
+Chicken Burger,70,/image/chicken burger.jpg,snacks
+Bread Omelet,30,/image/bread omelette.webp,snacks
+Pineapple Juice,40,/image/pineapple juice.jpg,juice
+Orange Juice,40,/image/orange juice.jpeg,juice
+Apple juice,40,/image/apple juice.jpg,juice
+Pomegranate Juice,40,/image/pomegranate juice.jpg,juice
+Grape Juice,40,/image/grape juice.jpg,juice
+Mango Juice,40,/image/mango juice.jpg,juice
+Watermelon Juice,40,/image/watermelon juice.jpg,juice
+Chocolate Milkshake,70,/image/chocolate milkshake.jpg,juice
+Strawberry Milkshake,70,/image/strawberry milkshake.jpg,juice
+Mango Milkshake,70,/image/mango milkshake.jpg,juice
+Falooda,100,/image/falooda.jpg,juice
+Soda Lime,30,/image/soda lime.jpeg,juice
+Egg Roll,70,/image/egg roll.webp,snacks
+Paneer Roll,70,/image/paneer roll.jpg,snacks
+Chicken Roll,80,/image/chicken roll.jpg,snacks
+Veg Roll1,60,/image/veg roll1.jpg,snacks

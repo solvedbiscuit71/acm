@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>ACM | Amrita Canteen Management</title>
+    <title>ACM | Amrita Canteen Management | Waiter</title>
 </svelte:head>
 
 <script lang="ts">
@@ -14,30 +14,29 @@
             }
         };
 
-        const result = await fetch('http://localhost:8000/user/token', options)
+        const result = await fetch('http://localhost:8000/waiter/token', options)
         return result.status
     }
 
-    function redirect(path: string) {
+    function redirect() {
         setInterval(() => {
-            window.location.replace(path)
+            window.location.replace("/waiter/login")
         }, 1000)
     }
 
     onMount(async () => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("waiter-token");
         if (token) {
             const status = await verifyToken(token)
             switch (status) {
                 case 200:
-                    redirect("/menu")
                     break
                 default:
-                    redirect("/login")
+                    redirect()
             }
             return
         } else {
-            redirect("/login")
+            redirect()
         }
     })
 </script>

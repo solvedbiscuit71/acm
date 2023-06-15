@@ -32,9 +32,19 @@ virtual enviroment**
 
 ### CLI
 
-To load item's data into the database, run
+To load menu data into the database, run
 ```bash
-python3 script.py --item
+python3 script.py --menu
+```
+
+To load waiter's credentials into the database, run
+```bash
+python3 script.py --waiter
+```
+
+To initiate the sequence generator for orders, run
+```bash
+python3 script.py --order
 ```
 
 To generate a bcrpyt salt, run
@@ -42,14 +52,21 @@ To generate a bcrpyt salt, run
 python3 script.py --salt
 ```
 
+Or, to run all the above command
+```bash
+python3 script.py --all
+```
+
+
 ### Environment variables
 
-For token generation, we need a SECRET, ALGORITHM and ORIGINS. add the following inside
-`schema/.env` file
 ```env
-SECRET=<your-secret>
 ALGORITHM=HS256
 ORIGINS=<list-of-origins>
+SALT=<salt-for-hashing>
+SECRET=<jwt-secret>
+WAITER_SECRET=<password-for-waiter>
+SEQ_START=<integer>
 ```
 
 ## Run
@@ -80,12 +97,12 @@ npm install
 ## Run
 
 ```bash
-# for development
+# for development purpose
 npm run dev
 
-# for production
+# for production purpose
 npm run build
 npm run preview
 ```
 
-This runs the frontend server at [localhost:8080](http://localhost:8080)
+This runs the frontend server at [localhost:8080](http://localhost:8080) for both development and production
