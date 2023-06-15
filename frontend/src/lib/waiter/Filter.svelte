@@ -1,12 +1,12 @@
 <script lang="ts">
-    type FilterType = 'new order' | 'preparing' | 'ready' | 'served'
+    type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
 
     export let filter: FilterType
 </script>
 
 <section>
     <ul>
-        <li class:active="{filter == "new order"}" on:mouseup={() => filter = "new order"}>New orders</li>
+        <li class:active="{filter == "placed"}" on:mouseup={() => filter = "placed"}>New orders</li>
         <li class:active="{filter == "preparing"}" on:mouseup={() => filter = "preparing"}>Preparing</li>
         <li class:active="{filter == "ready"}" on:mouseup={() => filter = "ready"}>Ready</li>
         <li class:active="{filter == "served"}" on:mouseup={() => filter = "served"}>Served</li>
