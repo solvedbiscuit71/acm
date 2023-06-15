@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Depends, Body
+from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,11 +10,12 @@ from pymongo import DESCENDING
 from schema.menu import Category
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate
-from schema.order import CartItem, generate_id
+from schema.order import CartItem, generate_id, Order
 from schema.database import database_connect, database_disconnect, ObjectId, Database
 from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
 from schema.cors import origins
 
+FILTERS = ('placed', 'preparing', 'ready', 'served')
 
 app = FastAPI()
 
@@ -142,6 +143,32 @@ async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db:
         orders.append(order)
 
     return orders
+
+
+@app.get("/order/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
+async def get_orders_by_filter(filter: Annotated[str, Header()], db: Database):
+    if filter not in FILTERS:
+        HTTPException(status_code=400, detail=f"Invalid filter, filter should be one of ({repr(FILTERS)})")
+    else:
+        orders = []
+        pipeline = [
+            {"$match": {"status": filter}},
+            {"$lookup": { 
+                "from": "users",
+                "localField": "user_id",
+                "foreignField": "_id",
+                "as": "user_info" 
+            }},
+            {"$set": {"user_name": "$user_info.name"}},
+            {"$project": {"user_name": {"$arrayElemAt": ['$user_name', 0]}, "items": 1, "total": 1}},
+            {"$sort": {"_id": -1}}
+        ]
+        
+        async for order in db.orders.aggregate(pipeline):
+            orders.append(order)
+
+        return orders
+    pass
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 
