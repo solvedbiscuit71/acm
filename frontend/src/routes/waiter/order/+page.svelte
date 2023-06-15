@@ -91,9 +91,11 @@
     }
 
     onMount(() => {
-        setTimeout(() => {
+        fetchOrder().then(data => orders = data)
+
+        setInterval(() => {
             fetchOrder().then(data => orders = data)
-        }, 0)
+        }, 2000)
     })
 </script>
 
@@ -146,6 +148,11 @@
 
     section {
         padding: 0 1em 1.5em;
+    }
+
+    p.empty {
+        font-size: 1rem;
+        color: #444444;
     }
 
     .order-container {
