@@ -7,28 +7,30 @@
     import Footer from "$lib/Footer.svelte";
     import Status from "$lib/Status.svelte";
 
+    type OrderStatus = "placed" | "preparing" | "ready" | "served";
+
     interface Item {
         _id: number;
         name: string;
         price: number;
         image_url: string;
-        category: string
+        category: string;
     }
 
     interface CartItem extends Item {
-        quantity: number
+        quantity: number;
     }
 
     interface Order {
         _id: number;
         items: CartItem[];
         total: number;
-        status: "preparing" | "ready" | "served";
+        status: OrderStatus;
     }
 
     interface Status {
         _id: number;
-        status: "preparing" | "ready" | "served";
+        status: OrderStatus;
     }
 
     let orders: Order[] | null = null

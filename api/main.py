@@ -121,7 +121,7 @@ async def create_order(id: Annotated[str, Depends(authenticate_access_token)], i
         "user_id": ObjectId(id),
         "items": [item.dict() for item in items],
         "total": total,
-        "status": "preparing"
+        "status": "placed"
     }
 
     result: InsertOneResult = await db.orders.insert_one(new_order)
