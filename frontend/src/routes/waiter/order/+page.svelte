@@ -5,12 +5,16 @@
 <script lang="ts">
     import Filter from "$lib/waiter/Filter.svelte";
     import Navbar from "$lib/waiter/Navbar.svelte";
+
+    type FilterType = 'new order' | 'preparing' | 'ready' | 'served'
+
+    let filter: FilterType = 'new order'
 </script>
 
 <main>
     <Navbar/>
 
-    <Filter/>
+    <Filter bind:filter />
 </main>
 
 <style>
