@@ -62,13 +62,13 @@ async def update_user(id: Annotated[ObjectId, Depends(authenticate_access_token)
 
     if user_data.mobile:
         count = await db.users.count_documents({"mobile": user_data.mobile,
-                                                "_id": {"$ne": id}})
+                                                "_id": {"$ne": ObjectId(id)}})
         if count:
             raise HTTPException(status_code=409, detail="mobile already used")
         payload.update({"mobile": user_data.mobile})
 
     if payload:
-        result: UpdateResult = await db.users.update_one({"_id": id}, {"$set": payload})
+        result: UpdateResult = await db.users.update_one({"_id": ObjectId(id)}, {"$set": payload})
         return {"message": "success", "modified_count": result.modified_count}
     else:
         return {"message": "success", "modified_count": 0}
