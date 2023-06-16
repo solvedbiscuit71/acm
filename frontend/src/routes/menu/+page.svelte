@@ -39,6 +39,30 @@
 
     let afterMount: boolean = false
 
+    function updateCategories() {
+        if (!categories) {
+            return
+        }
+
+        const options = {
+            method: 'GET',
+        };
+
+        fetch('http://localhost:8000/item/status', options)
+            .then(data => data.json())
+            .then(data => {
+                if (data && categories) {
+                    categories = categories.map(category => {
+                        category.items = category.items.map(item => {
+                            item.out_of_stock = data[item._id]
+                            return item
+                        })
+                        return category
+                    })
+                }
+            })
+    }
+
     function handleSelect(item: Item) {
         const findCart = cart.find(cartItem => cartItem._id == item._id)
         if (findCart) {
@@ -76,6 +100,8 @@
             case 200:
                 const data = await result.json()
                 categories = data;
+
+                setInterval(updateCategories, 2000)
                 
                 const localCart = localStorage.getItem('cart')
                 if (localCart) {
