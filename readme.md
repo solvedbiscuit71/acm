@@ -68,6 +68,7 @@ SECRET=<jwt-secret>
 WAITER_SECRET=<jwt-secret-for-waiter>
 SEQ_START=<integer>
 WAITER_PASSWORD=<password-for-waiter>
+CLOSE_TIME=<isoformat-time HH:MM:SS>
 ```
 
 ## Run
