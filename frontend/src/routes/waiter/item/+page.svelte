@@ -72,7 +72,7 @@
     <section>
         <ul>
             {#each items as item (item._id)}
-                <Item name={item.name} image_url={item.image_url} />
+                <Item name={item.name} image_url={item.image_url} out_of_stock={item.out_of_stock} />
             {:else}
                 <p class="empty">No items</p>
             {/each}

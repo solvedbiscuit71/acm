@@ -1,5 +1,7 @@
 <script lang="ts">
-    export let name: string, image_url: string;
+    import Toggle from "./Toggle.svelte";
+
+    export let name: string, image_url: string, out_of_stock: boolean = false;
 </script>
 
 <li class="item">
@@ -7,11 +9,7 @@
 
     <div class="info">
         <h1>{name}</h1>
-
-        <div class="toggle-button">
-            <div class="toggle"></div>
-            <span>Item available</span>
-        </div>
+        <Toggle {out_of_stock}/>
     </div>
 </li>
 
@@ -45,49 +43,10 @@
     }
 
     h1 {
-        font-size: 1.25rem;
+        font-size: 1.375rem;
         font-weight: 700;
         margin: 0;
 
         color: #444444;
-    }
-
-    .toggle-button {
-        align-self: flex-end;
-
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-
-        gap: 0.3125em;
-    }
-
-    .toggle-button span {
-        font-size: 0.65rem;
-        font-weight: 500;
-
-        color: #666867;
-    }
-
-    .toggle {
-        width: 2.875em;
-        min-height: 1.375em;
-
-        background-color: #68BE61;
-        border-radius: 1em;
-
-        position: relative;
-    }
-
-    .toggle::after {
-        content: "";
-        display: block;
-
-        border: 0.5em solid white;
-        border-radius: 50%;
-
-        position: absolute;
-        top: 12%;
-        right: 8%;
     }
 </style>
