@@ -43,13 +43,10 @@
         border-radius: 6px;
 
         padding: 0.285em 1em;
-        flex-grow: 1;
     }
 
     li.active {
         color: #575757;
         border-color: #575757;
     }
-
-
 </style>

@@ -1,6 +1,5 @@
 <script lang="ts">
     import Counter from "$lib/Counter.svelte";
-    import { afterUpdate } from "svelte";
 
     interface Item {
         _id: number;
@@ -86,10 +85,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+        padding: 0.5em 0;
     }
 
     img {
-        max-height: 150px;
+        height: auto;
         width: 150px;
         border-radius: 8px;
     }
@@ -99,10 +100,11 @@
         flex-direction: column;
 
         justify-content: center;
+        align-items: stretch;
     }
 
     h1 {
-        font-size: 1.5rem;
+        font-size: 1.375rem;
         font-weight: 700;
         margin: 0;
 
