@@ -30,14 +30,13 @@ async def generate_id() -> int:
 
 async def create_order(user_id: str, items: list[CartItem], total: int):
     db: AsyncIOMotorDatabase = get_database()
-    _id = await db.orders.find_one_and_update(
+    result = await db.orders.find_one_and_update(
         {"_id": "item_id"}, 
         {"$inc": {"sequence_value": 1}},
-        return_document=ReturnDocument.AFTER)["sequence_value"]
-
+        return_document=ReturnDocument.AFTER)
 
     new_order = {
-        "_id": _id,
+        "_id": result["sequence_value"],
         "user_id": ObjectId(user_id),
         "items": [item.dict() for item in items],
         "total": total,
