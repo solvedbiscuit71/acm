@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema.menu import CategoryOut, get_menu, get_categories, get_items_by_filter, get_out_of_stock_items
+from schema.menu import CategoryOut, get_menu, get_categories, get_items_by_filter, get_out_of_stock_items, update_item
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
 from schema.order import CartItem, create_order, get_order, get_order_status, get_order_by_filter, update_order_status
@@ -93,6 +93,18 @@ async def fetch_item_by_filter(category: Annotated[str, Header()]):
             return await get_out_of_stock_items()
         case filter:
             return await get_items_by_filter(filter)
+
+@app.patch("/item/{id}", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
+async def handle_patch_item(id: int, out_of_stock: Annotated[bool, Header()]):
+    result: tuple[int, int] = await update_item(id, out_of_stock)
+
+    match result:
+        case (0, _):
+            raise HTTPException(status_code=400, detail="Invalid id")
+        case (_, 0):
+            return {"message": "not modified"}
+        case _:
+            return {"message": "modified"}
 
 # -------------------
 # Order

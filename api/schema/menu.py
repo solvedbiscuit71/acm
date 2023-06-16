@@ -4,6 +4,7 @@ import dotenv
 from datetime import datetime, time
 from pydantic import BaseModel,Field
 from pymongo import DESCENDING
+from pymongo.results import UpdateResult
 from schema.database import get_database, AsyncIOMotorDatabase
 
 dotenv.load_dotenv()
@@ -80,3 +81,12 @@ async def get_out_of_stock_items():
         items.append(item)
 
     return items
+
+async def update_item(id: int, out_of_stock: bool):
+    db: AsyncIOMotorDatabase = get_database()
+
+    result: UpdateResult = await db.items.update_one(
+        {"_id": id},
+        {"$set": {"out_of_stock": out_of_stock}})
+    
+    return (result.matched_count, result.modified_count)
