@@ -3,6 +3,7 @@ import dotenv
 
 from datetime import datetime, time
 from pydantic import BaseModel,Field
+from pymongo import DESCENDING
 from schema.database import get_database, AsyncIOMotorDatabase
 
 dotenv.load_dotenv()
@@ -66,7 +67,7 @@ async def get_items_by_filter(filter: str):
     db: AsyncIOMotorDatabase = get_database()
 
     items = []
-    async for item in db.items.find({"category_id": filter}):
+    async for item in db.items.find({"category_id": filter}).sort("out_of_stock", DESCENDING):
         items.append(item)
 
     return items
