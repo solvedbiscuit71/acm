@@ -27,7 +27,14 @@
 
     <div class="item-container">
         {#each items as item (item._id)}
-            <Item categoryAvailable={available} handleClick={() => handleSelect(item)} {...item} />
+            <Item
+                categoryAvailable={available}
+                handleClick={() => handleSelect(item)}
+                name={item.name}
+                price={item.price}
+                image_url={item.image_url}
+                out_of_stock={item.out_of_stock}
+            />
         {/each}
     </div>
 </section>
