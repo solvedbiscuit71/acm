@@ -1,5 +1,4 @@
-from typing import Annotated
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from pydantic import BaseModel
 from bson.objectid import ObjectId as BaseObjectId
 from bson.errors import InvalidId
@@ -75,4 +74,3 @@ async def get_waiter_hashed_password(id: str) -> str:
     return waiter["hashed_password"]
 
 db: Connection = Connection()
-Database = Annotated[AsyncIOMotorDatabase, Depends(get_database)]

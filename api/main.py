@@ -1,19 +1,15 @@
 from typing import Annotated
-from datetime import datetime, time
 
 from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from pymongo.results import InsertOneResult, UpdateResult
-from pymongo import DESCENDING
-
 from schema.menu import Category, get_categories
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
-from schema.order import CartItem, generate_id
-from schema.database import database_connect, database_disconnect, ObjectId, Database
-from schema.security import authenticate_waiter
+from schema.order import CartItem, create_order, get_order, get_order_status, get_order_by_filter, update_order_status
+from schema.database import ObjectId, database_connect, database_disconnect
+from schema.waiter import authenticate_waiter
 from schema.cors import origins
 
 STATUS = ('placed', 'preparing', 'ready', 'served')
@@ -91,72 +87,37 @@ async def fetch_categories():
 # -------------------
 
 @app.post("/order")
-async def create_order(id: Annotated[str, Depends(authenticate_access_token)], items: list[CartItem], total: Annotated[int, Body()], db: Database):
-    new_order = {
-        "_id": await generate_id(),
-        "user_id": ObjectId(id),
-        "items": [item.dict() for item in items],
-        "total": total,
-        "status": "placed"
-    }
+async def handle_post_order(id: Annotated[str, Depends(authenticate_access_token)], items: list[CartItem], total: Annotated[int, Body()]):
+    return await create_order(id, items, total)
 
-    result: InsertOneResult = await db.orders.insert_one(new_order)
-    return {"_id": result.inserted_id}
 
 @app.get("/order", response_model=None)
-async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db: Database):
-    orders = []
-    async for order in db.orders.find({"user_id": ObjectId(id)}, {"user_id": False}).sort('_id', DESCENDING):
-        orders.append(order)
+async def handle_get_order(id: Annotated[str, Depends(authenticate_access_token)]):
+    return await get_order(id)
 
-    return orders
 
 @app.get("/order/status", response_model=None)
-async def get_orders(id: Annotated[str, Depends(authenticate_access_token)], db: Database):
-    orders = []
-    async for order in db.orders.find({"user_id": ObjectId(id)}, {"status": True}).sort('_id', DESCENDING):
-        orders.append(order)
-
-    return orders
+async def handle_get_order_status(id: Annotated[str, Depends(authenticate_access_token)]):
+    return await get_order_status(id)
 
 
 @app.get("/order/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
-async def get_orders_by_filter(filter: Annotated[str, Header()], db: Database):
-    if filter not in STATUS:
-        raise HTTPException(status_code=400, detail=f"Filter should be one of {STATUS}")
-    else:
-        orders = []
-        pipeline = [
-            {"$match": {"status": filter}},
-            {"$lookup": { 
-                "from": "users",
-                "localField": "user_id",
-                "foreignField": "_id",
-                "as": "user_info" 
-            }},
-            {"$set": {"user_name": "$user_info.name"}},
-            {"$project": {"user_name": {"$arrayElemAt": ['$user_name', 0]}, "items": 1, "total": 1}},
-            {"$sort": {"_id": -1}}
-        ]
-        
-        async for order in db.orders.aggregate(pipeline):
-            orders.append(order)
+async def handle_get_order_filter(filter: Annotated[str, Header()]):
+    return await get_order_by_filter(filter)
 
-        return orders
-    pass
 
 @app.patch("/order/{id}", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
-async def get_orders_by_filter(id: int, status: Annotated[str, Header()], db: Database):
-    if status not in STATUS:
-        raise HTTPException(status_code=400, detail=f"Status should be one of {STATUS}")
-    else:
-        result: UpdateResult = await db.orders.update_one({"_id": id}, {"$set": {"status": status}})
-        if result.modified_count > 0:
-            return {"message": "success"}
-        elif result.matched_count > 0:
-            return {"message": "no modification"}
-        else:
+async def handle_patch_order_by_id(id: int, status: Annotated[str, Header()]):
+    result: tuple[int, int] = await update_order_status(id, status)
+
+    match result:
+        case (0, _):
             raise HTTPException(status_code=400, detail="Invalid id")
+        case (_, 0):
+            return {"message": "not modified"}
+        case _:
+            return {"message": "modified"}
+
 
 app.mount('/image', StaticFiles(directory="image"), name="image")
 

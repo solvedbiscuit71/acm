@@ -4,8 +4,7 @@ import dotenv
 from fastapi import HTTPException
 from bcrypt import hashpw, checkpw
 
-from schema.waiter import Waiter
-from schema.database import count_user_by_id, get_waiter_hashed_password, ObjectId
+from schema.database import count_user_by_id, ObjectId
 
 dotenv.load_dotenv()
 salt = os.getenv('SALT').encode()
@@ -24,10 +23,3 @@ async def authenticate_id(id: ObjectId) -> ObjectId:
         return id
     else:
         raise HTTPException(status_code=400, detail="id not found")
-
-async def authenticate_waiter(waiter_auth: Waiter):
-    hashed_password = await get_waiter_hashed_password(waiter_auth.id)
-    if validate_password(waiter_auth.password, hashed_password):
-        return True
-    else:
-        raise HTTPException(status_code=401, detail="invalid password")
