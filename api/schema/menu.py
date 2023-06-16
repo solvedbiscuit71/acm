@@ -18,8 +18,10 @@ class Item(BaseModel):
 class Category(BaseModel):
     id: str = Field(alias="_id")
     starts_from: str
-    available: bool
     items: list[Item]
+
+class CategoryOut(Category):
+    available: bool
 
 async def get_categories():
     db: AsyncIOMotorDatabase = get_database()

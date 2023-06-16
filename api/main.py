@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema.menu import Category, get_categories
+from schema.menu import CategoryOut, get_categories
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
 from schema.order import CartItem, create_order, get_order, get_order_status, get_order_by_filter, update_order_status
@@ -78,7 +78,7 @@ async def create_waiter_token():
 # Menu
 # -------------------
 
-@app.get("/menu", response_model=list[Category])
+@app.get("/menu", response_model=list[CategoryOut])
 async def fetch_categories():
     return await get_categories()
 
