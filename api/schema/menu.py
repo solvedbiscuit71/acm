@@ -74,6 +74,15 @@ async def get_categories():
 
     return categories
 
+async def get_items_status():
+    db: AsyncIOMotorDatabase = get_database()
+
+    items = {}
+    async for item in db.items.find({}, {"_id": 1, "out_of_stock": 1}):
+        items.update({item["_id"] : item["out_of_stock"]})
+
+    return items
+
 async def get_items_by_filter(filter: str):
     db: AsyncIOMotorDatabase = get_database()
 

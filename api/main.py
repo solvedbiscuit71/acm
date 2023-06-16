@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema.menu import CategoryOut, get_menu, get_categories, get_items_by_filter, get_out_of_stock_items, update_item
+from schema.menu import CategoryOut, get_menu, get_categories, get_items_by_filter, get_out_of_stock_items, update_item, get_items_status
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
 from schema.order import CartItem, create_order, get_order, get_order_status, get_order_by_filter, update_order_status
@@ -85,6 +85,10 @@ async def fetch_menu():
 @app.get("/categories", response_model=None)
 async def fetch_categories():
     return await get_categories()
+
+@app.get("/item/status")
+async def fetch_item_status():
+    return await get_items_status()
 
 @app.get("/item/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
 async def fetch_item_by_filter(category: Annotated[str, Header()]):
