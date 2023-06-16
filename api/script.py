@@ -5,6 +5,7 @@ import asyncio
 
 from schema.security import hash_password
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from pymongo.results import InsertManyResult
 from bcrypt import gensalt
 
 dotenv.load_dotenv("./schema/.env")
@@ -31,7 +32,6 @@ async def create_waiter():
 
 async def create_menu():
     db: AsyncIOMotorDatabase = client["acm"]
-    await db.menu.drop()
 
     categories = []
     with open(os.getcwd() + os.sep + "assets" + os.sep + "categories.csv", "r") as file:
@@ -39,23 +39,17 @@ async def create_menu():
         headers[0] = "_id"
         headers.append("starts_from_time")
 
+        def convert_to_24hours(time, am_or_pm):
+            time = [int(x) for x in time.split(':')]
+            match am_or_pm:
+                case 'am':
+                    return '{:0>2}:{:0>2}:00'.format(str(time[0]), str(time[1]))
+                case 'pm':
+                    return '{:0>2}:{:0>2}:00'.format(str(time[0] + (12 if time[0] != 12 else 0)), str(time[1]))
+
         while category := file.readline()[:-1]:
             category = category.split(',')
-            time: list[int, int, str] = [
-                int(x) if x.isdigit() else x 
-                for _x in [__x.split(' ') for __x in category[1].split(':')] 
-                for x in _x
-            ]
-
-            match time[2]:
-                case 'pm':
-                    time[0] += 12 if time[0] != 12 else 0
-                case 'am':
-                    pass
-            time.pop()
-            time.append(0)
-            category.append(time)
-
+            category.append(convert_to_24hours(*category[1].split(' ')))
             categories.append(dict(zip(headers, category)))
     
     items, id = [], 200
@@ -69,18 +63,20 @@ async def create_menu():
                 item[i] = mod(item[i])
 
             item = dict(zip(headers, item))
-            item.update({"_id": id})
+            item.update({"_id": id, "out_of_stock": False})
             id += 1
 
             items.append(item)
 
     for category in categories:
-        name = category["_id"]
-        category_items = [item for item in items if item["category"] == name]
-        category.update({"items": category_items})
+        category_items = [item["_id"] for item in items if item["category_id"] == category["_id"]]
+        category.update({"items_id": category_items})
     
-    result = await db.menu.insert_many(categories)
+    result: InsertManyResult = await db.categories.insert_many(categories)
     print(f"Inserted {result.inserted_ids} categories")
+
+    result: InsertManyResult = await db.items.insert_many(items)
+    print(f"Inserted {result.inserted_ids} items")
 
 async def create_order():
     db: AsyncIOMotorDatabase = client["acm"]

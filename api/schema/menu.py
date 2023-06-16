@@ -13,7 +13,7 @@ class Item(BaseModel):
     name: str
     price: int
     image_url: str
-    category: str
+    out_of_stock: bool
 
 class Category(BaseModel):
     id: str = Field(alias="_id")
@@ -26,10 +26,28 @@ class CategoryOut(Category):
 async def get_categories():
     db: AsyncIOMotorDatabase = get_database()
 
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "items",
+                "localField": "items_id",
+                "foreignField": "_id",
+                "as": "items_info"
+            }
+        },
+        {
+            "$project": {
+                "starts_from": 1,
+                "starts_from_time": 1,
+                "items": "$items_info"
+            }
+        }
+    ]
+
     now: time = datetime.now().time()
     categories = []
-    async for category in db.menu.find():
-        start_time = time(*category["starts_from_time"])
+    async for category in db.categories.aggregate(pipeline):
+        start_time = time.fromisoformat(category["starts_from_time"])
         category.update({"available": close_time > now >= start_time})
         categories.append(category)
 

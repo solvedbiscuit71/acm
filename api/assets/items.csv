@@ -1,4 +1,4 @@
-name,price,image_url,category
+name,price,image_url,category_id
 Plain Dosa,50,/image/plain dosa.jpg,breakfast
 Podi Dosa,60,/image/podi dosa.jpg,breakfast
 Ghee Dosa,60,/image/ghee dosa.jpg,breakfast
