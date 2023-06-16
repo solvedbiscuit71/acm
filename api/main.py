@@ -10,10 +10,10 @@ from pymongo import DESCENDING
 
 from schema.menu import Category, get_categories
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
-from schema.user import UserId, UserCreate, UserUpdate
-from schema.order import CartItem, generate_id, Order
+from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
+from schema.order import CartItem, generate_id
 from schema.database import database_connect, database_disconnect, ObjectId, Database
-from schema.security import hash_password, authenticate_user_id, authenticate_user_mobile, authenticate_waiter
+from schema.security import authenticate_waiter
 from schema.cors import origins
 
 STATUS = ('placed', 'preparing', 'ready', 'served')
@@ -34,71 +34,49 @@ app.add_middleware(
 
 
 @app.get("/user", response_model=UserId)
-async def get_user(id: Annotated[ObjectId, Depends(authenticate_user_mobile)]):
+async def handle_get_user(id: Annotated[ObjectId, Depends(authenticate_user_mobile)]):
     return {"_id": id}
 
 
 @app.post("/user", response_model=UserId)
-async def create_user(user_data: UserCreate, db: Database):
-    payload = user_data.dict()
-    payload.pop("password")
-    payload.update({"hashed_password": hash_password(user_data.password)})
-
-    count = await db.users.count_documents({"mobile": user_data.mobile})
-    if count:
-        raise HTTPException(status_code=409, detail="mobile already used")
-
-    result: InsertOneResult = await db.users.insert_one(payload)
-    return {"_id": result.inserted_id}
+async def handle_post_user(user_data: UserCreate):
+    return await create_user(user_data)
 
 
 @app.patch("/user", response_model=None)
-async def update_user(id: Annotated[ObjectId, Depends(authenticate_access_token)], user_data: UserUpdate, db: Database):
-    payload = dict()
-    if user_data.name:
-        payload.update({"name": user_data.name})
+async def handle_patch_user(id: Annotated[ObjectId, Depends(authenticate_access_token)], user_data: UserUpdate):
+    result: tuple[int, int] = await update_user(id, user_data)
 
-    if user_data.password:
-        payload.update({"hashed_password": hash_password(user_data.password)})
-
-    if user_data.mobile:
-        count = await db.users.count_documents({"mobile": user_data.mobile,
-                                                "_id": {"$ne": ObjectId(id)}})
-        if count:
-            raise HTTPException(status_code=409, detail="mobile already used")
-        payload.update({"mobile": user_data.mobile})
-
-    if payload:
-        result: UpdateResult = await db.users.update_one({"_id": ObjectId(id)}, {"$set": payload})
-        return {"message": "success", "modified_count": result.modified_count}
-    else:
-        return {"message": "success", "modified_count": 0}
-
-
-@app.post("/user/token", response_model=Token)
-async def create_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
-    payload = {"_id": str(id)}
-    return {"access_token": create_access_token(payload, 'access')}
+    match result:
+        case (0, _):
+            raise HTTPException(status_code=400, detail="Invalid id")
+        case (_, 0):
+            return {"message": "not modified"}
+        case _:
+            return {"message": "modified"}
 
 
 @app.get("/user/token")
-async def verify_token(id: Annotated[str, Depends(authenticate_access_token)]):
+async def handle_get_user_token(id: Annotated[str, Depends(authenticate_access_token)]):
     return {"_id": id}
+
+
+@app.post("/user/token", response_model=Token)
+async def handle_post_user_token(id: Annotated[ObjectId, Depends(authenticate_user_id)]):
+    return create_access_token({"_id": str(id)}, 'access')
 
 # -------------------
 # Waiter
 # -------------------
 
-
-@app.post("/waiter/token", dependencies=[Depends(authenticate_waiter)], response_model=Token)
-async def create_waiter_token():
-    payload = {"_id": "waiter"}
-    return {"access_token": create_access_token(payload, 'waiter')}
-
-
 @app.get("/waiter/token")
 async def verify_token(id: Annotated[str, Depends(authenticate_waiter_token)]):
     return {"_id": id}
+
+
+@app.post("/waiter/token", dependencies=[Depends(authenticate_waiter)], response_model=Token)
+async def create_waiter_token():
+    return create_access_token({"_id": "waiter"}, 'waiter')
 
 # -------------------
 # Menu

@@ -1,14 +1,11 @@
 import os
 import dotenv
 
-from typing import Annotated
-
-from fastapi import HTTPException, Header
+from fastapi import HTTPException
 from bcrypt import hashpw, checkpw
 
 from schema.waiter import Waiter
-from schema.user import UserAuth
-from schema.database import get_user_by_id, get_user_by_mobile, count_user_by_id, get_waiter_hashed_password, ObjectId
+from schema.database import count_user_by_id, get_waiter_hashed_password, ObjectId
 
 dotenv.load_dotenv()
 salt = os.getenv('SALT').encode()
@@ -27,23 +24,6 @@ async def authenticate_id(id: ObjectId) -> ObjectId:
         return id
     else:
         raise HTTPException(status_code=400, detail="id not found")
-
-
-async def authenticate_user_id(user_auth: UserAuth) -> ObjectId:
-    user = await get_user_by_id(user_auth.id)
-    if validate_password(user_auth.password, user["hashed_password"]):
-        return user["_id"]
-    else:
-        raise HTTPException(status_code=401, detail="invalid password")
-
-
-async def authenticate_user_mobile(mobile: Annotated[str, Header()], password: Annotated[str, Header()]) -> ObjectId:
-    user = await get_user_by_mobile(mobile)
-    if validate_password(password, user["hashed_password"]):
-        return user["_id"]
-    else:
-        raise HTTPException(status_code=401, detail="invalid password")
-
 
 async def authenticate_waiter(waiter_auth: Waiter):
     hashed_password = await get_waiter_hashed_password(waiter_auth.id)

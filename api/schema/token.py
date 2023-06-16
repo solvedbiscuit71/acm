@@ -27,9 +27,9 @@ class TokenData(UserId):
 def create_access_token(payload: dict, type: str) -> str:
     match type:
         case 'access':
-            return encode(payload=payload, key=secret, algorithm=algorithm)
+            return {"access_token": encode(payload=payload, key=secret, algorithm=algorithm)}
         case 'waiter':
-            return encode(payload=payload, key=waiter_secret, algorithm=algorithm)
+            return {"access_token": encode(payload=payload, key=waiter_secret, algorithm=algorithm)}
         case _:
             raise HTTPException(status_code=500, detail="Invalid token type")
 
