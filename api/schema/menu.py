@@ -57,7 +57,7 @@ async def get_categories():
     db: AsyncIOMotorDatabase = get_database()
 
     categories = []
-    async for category in db.categories.find({}, {"_id": 0, "name": "$_id"}):
+    async for category in db.categories.find({}, {"_id": 0, "name": "$_id", "starts_from": 1}):
         categories.append(category)
 
     return categories
@@ -67,6 +67,15 @@ async def get_items_by_filter(filter: str):
 
     items = []
     async for item in db.items.find({"category_id": filter}):
+        items.append(item)
+
+    return items
+
+async def get_out_of_stock_items():
+    db: AsyncIOMotorDatabase = get_database()
+
+    items = []
+    async for item in db.items.find({"out_of_stock": True}):
         items.append(item)
 
     return items
