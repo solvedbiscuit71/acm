@@ -90,7 +90,7 @@
     }
 
     img {
-        height: auto;
+        height: 150px;
         width: 150px;
         border-radius: 8px;
     }

@@ -27,6 +27,25 @@
 
     let items: Item[] = []
 
+    async function updateItem(item_id: number, out_of_stock: boolean) {
+        const options = {
+            method: 'PATCH',
+            headers: {
+                'Out-Of-Stock': out_of_stock ? 'true' : 'false',
+                Authorization: `Bearer ${localStorage.getItem('waiter-token')}`,
+            },
+        };
+
+        const result = await fetch(`http://localhost:8000/item/${item_id}`, options) 
+        switch (result.status) {
+            case 200:
+                items = await fetchItems()
+                break
+            default:
+                alert("Unhandled error occured")
+        }
+    }
+
     async function fetchItems() {
         if (!browser) {
             return
@@ -82,7 +101,7 @@
 
         <ul>
             {#each items as item (item._id)}
-                <Item name={item.name} image_url={item.image_url} out_of_stock={item.out_of_stock} />
+                <Item on:click={async () => {await updateItem(item._id, !item.out_of_stock)}} name={item.name} image_url={item.image_url} out_of_stock={item.out_of_stock} />
             {:else}
                 <p class="empty">No items</p>
             {/each}

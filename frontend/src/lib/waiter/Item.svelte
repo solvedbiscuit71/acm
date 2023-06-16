@@ -9,7 +9,7 @@
 
     <div class="info">
         <h1>{name}</h1>
-        <Toggle {out_of_stock}/>
+        <Toggle on:click {out_of_stock}/>
     </div>
 </li>
 

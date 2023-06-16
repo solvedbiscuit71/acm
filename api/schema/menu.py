@@ -3,7 +3,7 @@ import dotenv
 
 from datetime import datetime, time
 from pydantic import BaseModel,Field
-from pymongo import DESCENDING
+from pymongo import ASCENDING
 from pymongo.results import UpdateResult
 from schema.database import get_database, AsyncIOMotorDatabase
 
@@ -43,6 +43,16 @@ async def get_menu():
                 "starts_from_time": 1,
                 "items": "$items_info"
             }
+        },
+        {
+            "$set": {
+                "items": {
+                    "$sortArray": {
+                        "input": "$items",
+                        "sortBy": {"name": 1}
+                    }
+                }
+            }
         }
     ]
 
@@ -68,7 +78,7 @@ async def get_items_by_filter(filter: str):
     db: AsyncIOMotorDatabase = get_database()
 
     items = []
-    async for item in db.items.find({"category_id": filter}).sort("out_of_stock", DESCENDING):
+    async for item in db.items.find({"category_id": filter}).sort("name", ASCENDING):
         items.append(item)
 
     return items

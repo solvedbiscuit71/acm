@@ -40,12 +40,12 @@
     .alert {
         position: absolute;
 
-        color: #FF5252;
+        color: #ff5252bb;
         top: 50%;
         left: 50%;
 
         width: max-content;
-        transform: translate(-50%, -50%) rotate(-35deg);
+        transform: translate(-50%, -50%);
 
         font-size: 1.25rem;
         font-weight: 600;
