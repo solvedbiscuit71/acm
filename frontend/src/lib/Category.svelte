@@ -1,14 +1,12 @@
 <script lang="ts">
     import Item from "$lib/Item.svelte";
 
-    const backend_url = "http://localhost:8000"
-
     interface Item {
         _id: number;
         name: string;
         price: number;
         image_url: string;
-        category: string
+        out_of_stock: boolean;
     }
 
     export let _id: string,
@@ -16,12 +14,6 @@
                available: boolean,
                items: Item[];
     export let handleSelect: (item: Item) => void;
-
-    function handleClick(item: Item) {
-        if (available) {
-            handleSelect(item)
-        }
-    }
 </script>
 
 <section class="category">
@@ -35,7 +27,7 @@
 
     <div class="item-container">
         {#each items as item (item._id)}
-            <Item {available} on:mouseup={() => handleClick(item)} name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
+            <Item categoryAvailable={available} handleClick={() => handleSelect(item)} {...item} />
         {/each}
     </div>
 </section>
@@ -85,7 +77,7 @@
         gap: 1.5em;
 
         justify-content: flex-start;
-        align-items: center;
+        align-items: stretch;
 
         overflow: scroll;
     }
