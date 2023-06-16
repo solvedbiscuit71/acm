@@ -10,4 +10,5 @@ class Item(BaseModel):
 class Category(BaseModel):
     id: str = Field(alias="_id")
     starts_from: str
+    starts_from_time: list[int, int]
     items: list[Item]

@@ -34,18 +34,28 @@ async def create_menu():
     await db.menu.drop()
 
     categories = []
-    modifiers = [str, str]
     with open(os.getcwd() + os.sep + "assets" + os.sep + "categories.csv", "r") as file:
         headers = file.readline()[:-1].split(',')
         headers[0] = "_id"
+        headers.append("starts_from_time")
 
         while category := file.readline()[:-1]:
             category = category.split(',')
-            for i, mod in enumerate(modifiers):
-                category[i] = mod(category[i])
+            time: list[int, int, str] = [
+                int(x) if x.isdigit() else x 
+                for _x in [__x.split(' ') for __x in category[1].split(':')] 
+                for x in _x
+            ]
+
+            match time[2]:
+                case 'pm':
+                    time[0] += 12 if time[0] != 12 else 0
+                case 'am':
+                    pass
+            time.pop()
+            category.append(time)
+
             categories.append(dict(zip(headers, category)))
-
-
     
     items, id = [], 200
     modifiers = [str, int, str, str]
