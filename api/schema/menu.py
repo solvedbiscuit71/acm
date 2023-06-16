@@ -62,3 +62,11 @@ async def get_categories():
 
     return categories
 
+async def get_items_by_filter(filter: str):
+    db: AsyncIOMotorDatabase = get_database()
+
+    items = []
+    async for item in db.items.find({"category_id": filter}):
+        items.append(item)
+
+    return items

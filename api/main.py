@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema.menu import CategoryOut, get_menu, get_categories
+from schema.menu import CategoryOut, get_menu, get_categories, get_items_by_filter
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate, create_user, update_user, authenticate_user_id, authenticate_user_mobile
 from schema.order import CartItem, create_order, get_order, get_order_status, get_order_by_filter, update_order_status
@@ -86,6 +86,10 @@ async def fetch_menu():
 async def fetch_categories():
     return await get_categories()
 
+@app.get("/item/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
+async def fetch_item_by_filter(category: Annotated[str, Header()]):
+    return await get_items_by_filter(category)
+
 # -------------------
 # Order
 # -------------------
@@ -106,8 +110,8 @@ async def handle_get_order_status(id: Annotated[str, Depends(authenticate_access
 
 
 @app.get("/order/filter", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
-async def handle_get_order_filter(filter: Annotated[str, Header()]):
-    return await get_order_by_filter(filter)
+async def handle_get_order_filter(status: Annotated[str, Header()]):
+    return await get_order_by_filter(status)
 
 
 @app.patch("/order/{id}", dependencies=[Depends(authenticate_waiter_token)], response_model=None)
