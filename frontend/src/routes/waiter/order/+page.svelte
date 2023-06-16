@@ -16,7 +16,7 @@
         name: string;
         price: number;
         image_url: string;
-        category: string;
+        out_of_stock: boolean;
     }
 
     interface CartItem extends Item {
@@ -37,7 +37,7 @@
             const options = {
                 method: 'GET',
                 headers: {
-                    Filter: currentFilter,
+                    Status: currentFilter,
                     Authorization: `Bearer ${localStorage.getItem("waiter-token")}`,
                 },
             };

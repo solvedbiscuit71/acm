@@ -14,7 +14,7 @@
         name: string;
         price: number;
         image_url: string;
-        category: string;
+        out_of_stock: boolean;
     }
 
     interface CartItem extends Item {
