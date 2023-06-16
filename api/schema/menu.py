@@ -23,7 +23,7 @@ class Category(BaseModel):
 class CategoryOut(Category):
     available: bool
 
-async def get_categories():
+async def get_menu():
     db: AsyncIOMotorDatabase = get_database()
 
     pipeline = [
@@ -52,3 +52,13 @@ async def get_categories():
         categories.append(category)
 
     return categories
+
+async def get_categories():
+    db: AsyncIOMotorDatabase = get_database()
+
+    categories = []
+    async for category in db.categories.find({}, {"_id": 0, "name": "$_id"}):
+        categories.append(category)
+
+    return categories
+
