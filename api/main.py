@@ -1,4 +1,5 @@
 from typing import Annotated
+from datetime import datetime, time
 
 from fastapi import FastAPI, HTTPException, Depends, Body, Header
 from fastapi.staticfiles import StaticFiles
@@ -7,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo.results import InsertOneResult, UpdateResult
 from pymongo import DESCENDING
 
-from schema.menu import Category
+from schema.menu import Category, get_categories
 from schema.token import Token, create_access_token, authenticate_access_token, authenticate_waiter_token
 from schema.user import UserId, UserCreate, UserUpdate
 from schema.order import CartItem, generate_id, Order
@@ -104,12 +105,8 @@ async def verify_token(id: Annotated[str, Depends(authenticate_waiter_token)]):
 # -------------------
 
 @app.get("/menu", response_model=list[Category])
-async def fetch_categories(db: Database):
-    categories = []
-    async for category in db.menu.find():
-        categories.append(category)
-
-    return categories
+async def fetch_categories():
+    return await get_categories()
 
 # -------------------
 # Order

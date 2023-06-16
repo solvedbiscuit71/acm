@@ -53,6 +53,7 @@ async def create_menu():
                 case 'am':
                     pass
             time.pop()
+            time.append(0)
             category.append(time)
 
             categories.append(dict(zip(headers, category)))
