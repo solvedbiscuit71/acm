@@ -1,16 +1,15 @@
 <svelte:head>
-    <title>ACM | Amrita Canteen Management | Order</title>
+    <title>ACM | Waiter | Order</title>
 </svelte:head>
 
 <script lang="ts">
     import Filter from "$lib/waiter/Filter.svelte";
     import Navbar from "$lib/waiter/Navbar.svelte";
     import Status from "$lib/Status.svelte";
-    import { browser } from "$app/environment";
     import UpdateButton from "$lib/waiter/UpdateButton.svelte";
-    import { onMount } from "svelte";
 
-    type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
+    import { onMount } from "svelte";
+    import { browser } from "$app/environment";
 
     interface Item {
         _id: number;
@@ -31,14 +30,6 @@
         total: number;
     }
 
-    const nextStatus = {
-        placed: "preparing",
-        preparing: "ready",
-        ready: "served",
-    }
-
-    let filter: FilterType = 'placed'
-
     let orders: Order[]
 
     async function fetchOrder() {
@@ -46,7 +37,7 @@
             const options = {
                 method: 'GET',
                 headers: {
-                    Filter: filter,
+                    Filter: currentFilter,
                     Authorization: `Bearer ${localStorage.getItem("waiter-token")}`,
                 },
             };
@@ -58,15 +49,21 @@
         }
     }
 
+    const nextStatus = {
+        placed: "preparing",
+        preparing: "ready",
+        ready: "served",
+    }
+
     async function updateOrder(orderId: number) {
-        if (filter == 'served' || !browser) {
+        if (currentFilter == 'served' || !browser) {
             return
         }
 
         const options = {
             method: 'PATCH',
             headers: {
-                Status: nextStatus[filter],
+                Status: nextStatus[currentFilter],
                 Authorization: `Bearer ${localStorage.getItem("waiter-token")}`,
             },
         };
@@ -74,15 +71,27 @@
         const result = await fetch(`http://localhost:8000/order/${orderId}`, options)
         switch (result.status) {
             case 200:
-                changeFilter(filter)
+                changeFilter(currentFilter)
                 break
             default:
                 alert("Unhandled error occured")
         }
     }
 
+    const filters = [
+        {name: 'placed', handleClick: () => changeFilter('placed'), imageUrl: '/icon-orange-tick.png', nextStatus: 'preparing'},
+        {name: 'preparing', handleClick: () => changeFilter('preparing'), imageUrl: '/icon-green-tick.png', nextStatus: 'preparing'},
+        {name: 'ready', handleClick: () => changeFilter('ready'), imageUrl: '/icon-purple-tick.png', nextStatus: 'preparing'},
+        {name: 'served', handleClick: () => changeFilter('served'), imageUrl: '', nextStatus: ''},
+    ]
+    type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
+    let currentFilter: FilterType = 'placed'
+
+    $: imageUrl = filters.filter(x => x.name == currentFilter)[0].imageUrl
+    $: textContent = "Mark as " + filters.filter(x => x.name == currentFilter)[0].nextStatus
+
     function changeFilter(newFilter: FilterType) {
-        filter = newFilter
+        currentFilter = newFilter
         orders = []
 
         setTimeout(() => {
@@ -101,8 +110,7 @@
 
 <main>
     <Navbar/>
-
-    <Filter {filter} handleClick={changeFilter} />
+    <Filter {filters} {currentFilter} />
 
     <section>
         {#if orders && orders.length != 0}
@@ -112,7 +120,7 @@
                     <div class="order-info">
                         <div>
                             <div>Order no: <span>{order._id}</span></div>
-                            <Status status={filter} />
+                            <Status status={currentFilter} />
                         </div>
                         <div>
                             By {order.user_name}
@@ -129,8 +137,8 @@
                         {/each}
                     </ul>
 
-                    {#if filter != 'served'}
-                        <UpdateButton on:click={() => updateOrder(order._id)} {filter} />
+                    {#if currentFilter != 'served'}
+                        <UpdateButton {imageUrl} {textContent} on:click={() => updateOrder(order._id)} />
                     {/if}
                 </li>
                 {/each}

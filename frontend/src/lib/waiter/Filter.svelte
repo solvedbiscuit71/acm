@@ -1,16 +1,16 @@
 <script lang="ts">
-    type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
-
-    export let filter: FilterType
-    export let handleClick: (filter: FilterType) => void
+    export let filters: {
+        name: string;
+        handleClick: () => void;
+    }[]
+    export let currentFilter: string
 </script>
 
 <section>
     <ul>
-        <li class:active="{filter == "placed"}" on:mouseup={() => handleClick("placed")}>New orders</li>
-        <li class:active="{filter == "preparing"}" on:mouseup={() => handleClick("preparing")}>Preparing</li>
-        <li class:active="{filter == "ready"}" on:mouseup={() => handleClick("ready")}>Ready</li>
-        <li class:active="{filter == "served"}" on:mouseup={() => handleClick("served")}>Served</li>
+        {#each filters as filter}
+            <li class:active="{filter.name == currentFilter}" on:mouseup={filter.handleClick}>{filter.name}</li>
+        {/each}
     </ul>
 </section>
 
