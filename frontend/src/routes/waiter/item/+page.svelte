@@ -19,9 +19,11 @@
 
     let filters: {
         name: string;
+        starts_from: string;
         handleClick: () => void;
     }[] = []
     let currentFilter: string = 'out of stock'
+    $: currentStartsFrom = filters.find(x => x.name == currentFilter)?.starts_from
 
     let items: Item[] = []
 
@@ -62,6 +64,9 @@
         })
 
         filters = [{name: 'out of stock', handleClick: () => changeFilter('out of stock')}, ...updateData]
+        setTimeout(() => {
+            fetchItems().then(data => items = data)
+        }, 0)
     })
 </script>
 
@@ -70,6 +75,11 @@
     <Filter {filters} {currentFilter}/>
 
     <section>
+        {#if currentFilter != 'out of stock'}
+            <h2>{currentFilter}</h2>
+            <p>From {currentStartsFrom}</p>
+        {/if}
+
         <ul>
             {#each items as item (item._id)}
                 <Item name={item.name} image_url={item.image_url} out_of_stock={item.out_of_stock} />
@@ -104,4 +114,20 @@
         gap: 1.5em;
     }
 
+    h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        text-transform: capitalize;
+
+        color: #444444;
+        margin: 0;
+    }    
+    
+    h2+p {
+        font-size: 1rem;
+        font-weight: 400;
+
+        color: #565656;
+        margin: 0 0 1em;
+    }
 </style>
