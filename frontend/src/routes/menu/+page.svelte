@@ -26,7 +26,7 @@
     interface Category {
         _id: string;
         starts_from: string;
-        starts_from_time: number[];
+        available: boolean;
         items: Item[]
     }
 

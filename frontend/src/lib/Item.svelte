@@ -1,10 +1,10 @@
 <script lang="ts">
     export let name: string, price: number, image_url: string;
-    export let isAvailable: boolean = true
+    export let available: boolean = true
 </script>
 
 <div class="item" on:mouseup>
-    <img class:available="{isAvailable}" src="{image_url}" alt="{name}">
+    <img class:available src="{image_url}" alt="{name}">
     <div>
         <h3>{name}</h3>
         <p>₨ {price}</p>
