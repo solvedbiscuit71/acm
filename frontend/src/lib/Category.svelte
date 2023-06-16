@@ -11,14 +11,32 @@
         category: string
     }
 
-    export let name: string, starts_from: string, items: Item[];
+    export let _id: string,
+               starts_from: string,
+               starts_from_time: number[],
+               items: Item[];
     export let handleSelect: (item: Item) => void;
 
+    function checkAvailable(time2: number[]) {
+        const now = new Date()
+        const time = [now.getHours(), now.getMinutes()]
+
+        return (time[0] > time2[0])
+               || (time[0] == time2[0] && time[1] >= time2[1])
+    }
+
+    function handleClick(item: Item) {
+        if (isAvailable) {
+            handleSelect(item)
+        }
+    }
+
+    $: isAvailable = checkAvailable(starts_from_time)
 </script>
 
 <section class="category">
     <div class="category-header">
-        <h2>{name}</h2>
+        <h2>{_id}</h2>
         <div>
             <span>From {starts_from}</span>
             <button>show</button>
@@ -27,7 +45,7 @@
 
     <div class="item-container">
         {#each items as item (item._id)}
-            <Item on:mouseup={() => handleSelect(item)} name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
+            <Item {isAvailable} on:mouseup={() => handleClick(item)} name="{item.name}" image_url="{backend_url}{item.image_url}" price="{item.price}"/>
         {/each}
     </div>
 </section>

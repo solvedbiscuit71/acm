@@ -26,6 +26,7 @@
     interface Category {
         _id: string;
         starts_from: string;
+        starts_from_time: number[];
         items: Item[]
     }
 
@@ -105,7 +106,7 @@
     <section class="category-container">
         {#if categories}
             {#each categories as category (category._id)}
-                <Category {handleSelect}  name="{category._id}" starts_from="{category.starts_from}" items={category.items} />
+                <Category {handleSelect}  {...category} />
             {/each}
         {/if}
     </section>

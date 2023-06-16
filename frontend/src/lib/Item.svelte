@@ -1,9 +1,10 @@
 <script lang="ts">
     export let name: string, price: number, image_url: string;
+    export let isAvailable: boolean = true
 </script>
 
 <div class="item" on:mouseup>
-    <img src="{image_url}" alt="{name}">
+    <img class:available="{isAvailable}" src="{image_url}" alt="{name}">
     <div>
         <h3>{name}</h3>
         <p>₨ {price}</p>
@@ -27,7 +28,13 @@
         height: 180px;
 
         border-radius: 4px;
+        filter: grayscale(1);
     }
+
+    .item img.available {
+        filter: none;
+    }
+
 
     .item h3, .item p {
         margin: 0;
