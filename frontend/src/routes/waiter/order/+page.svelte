@@ -80,15 +80,15 @@
 
     const filters = [
         {name: 'placed', handleClick: () => changeFilter('placed'), imageUrl: '/icon-orange-tick.png', nextStatus: 'preparing'},
-        {name: 'preparing', handleClick: () => changeFilter('preparing'), imageUrl: '/icon-green-tick.png', nextStatus: 'preparing'},
-        {name: 'ready', handleClick: () => changeFilter('ready'), imageUrl: '/icon-purple-tick.png', nextStatus: 'preparing'},
+        {name: 'preparing', handleClick: () => changeFilter('preparing'), imageUrl: '/icon-green-tick.png', nextStatus: 'ready'},
+        {name: 'ready', handleClick: () => changeFilter('ready'), imageUrl: '/icon-purple-tick.png', nextStatus: 'served'},
         {name: 'served', handleClick: () => changeFilter('served'), imageUrl: '', nextStatus: ''},
     ]
     type FilterType = 'placed' | 'preparing' | 'ready' | 'served'
     let currentFilter: FilterType = 'placed'
 
     $: imageUrl = filters.filter(x => x.name == currentFilter)[0].imageUrl
-    $: textContent = "Mark as " + filters.filter(x => x.name == currentFilter)[0].nextStatus
+    $: textContent = filters.filter(x => x.name == currentFilter)[0].nextStatus
 
     function changeFilter(newFilter: FilterType) {
         currentFilter = newFilter
